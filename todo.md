@@ -63,3 +63,12 @@
 - [x] Update UI to show keywords are optional but helpful
 - [x] Update AI prompt to focus on subprime lending
 - [x] Test keyword-based name generation
+
+## GitHub and Vercel Deployment
+- [ ] Initialize git repository
+- [ ] Create .gitignore for sensitive files
+- [ ] Create GitHub repository
+- [ ] Push code to GitHub
+- [ ] Configure Vercel deployment settings
+- [ ] Add environment variables documentation for Vercel
+- [ ] Test Vercel deployment configuration
