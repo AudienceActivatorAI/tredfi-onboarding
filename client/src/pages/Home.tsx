@@ -8,7 +8,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, Check, ChevronLeft, ChevronRight, ShieldCheck, Save } from "lucide-react";
+import { ArrowRight, Check, ChevronLeft, ChevronRight, ShieldCheck, Save, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -44,6 +44,7 @@ const STORAGE_KEY_STEP = "tredfi-onboarding-step";
 export default function Home() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submissionStatus, setSubmissionStatus] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -116,8 +117,20 @@ export default function Home() {
 
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    // Simulate multi-step submission process
+    setSubmissionStatus("Validating your responses...");
+    await new Promise(resolve => setTimeout(resolve, 800));
+    
+    setSubmissionStatus("Encrypting data for secure transmission...");
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    setSubmissionStatus("Sending to Tredfi secure servers...");
+    await new Promise(resolve => setTimeout(resolve, 1200));
+    
+    setSubmissionStatus("Finalizing setup...");
+    await new Promise(resolve => setTimeout(resolve, 500));
+
     console.log(data);
     
     // Clear local storage on success
@@ -195,8 +208,31 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="flex-1 flex flex-col items-center justify-center p-4 z-10 container mx-auto max-w-4xl">
+      <main className="flex-1 flex flex-col items-center justify-center p-4 z-10 container mx-auto max-w-4xl relative">
         
+        {/* Submission Overlay */}
+        <AnimatePresence>
+          {isSubmitting && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm rounded-xl"
+            >
+              <div className="flex flex-col items-center space-y-4 p-8 bg-card rounded-xl shadow-2xl border border-border max-w-sm w-full mx-4">
+                <div className="relative">
+                  <div className="w-16 h-16 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <ShieldCheck className="w-6 h-6 text-primary" />
+                  </div>
+                </div>
+                <h3 className="text-xl font-bold font-serif text-foreground">Submitting...</h3>
+                <p className="text-muted-foreground text-center animate-pulse">{submissionStatus}</p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Progress Bar */}
         {currentStep > 0 && (
           <div className="w-full max-w-2xl mb-8 space-y-2">
@@ -657,6 +693,7 @@ function FormStep({
             variant="ghost" 
             onClick={onPrev}
             className="text-muted-foreground hover:text-foreground"
+            disabled={isSubmitting}
           >
             <ChevronLeft className="mr-2 w-4 h-4" /> Back
           </Button>
