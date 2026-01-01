@@ -18,6 +18,12 @@ import { toast } from "sonner";
 
 // Define the form data structure
 type FormData = {
+  dealershipName: string;
+  dealershipAddress: string;
+  dealershipPhone: string;
+  primaryContactName: string;
+  primaryContactEmail: string;
+  primaryContactCell: string;
   crmName: string;
   crmNotApplicable: boolean;
   dmsName: string;
@@ -38,9 +44,13 @@ type FormData = {
   salesProcessNotApplicable: boolean;
   rehashingLenders: string;
   rehashingNotApplicable: boolean;
+  platformName: string;
+  colorScheme: string;
+  tireWheelSales: string;
+  platformUsage: string;
 };
 
-const TOTAL_STEPS = 11; // 10 questions + 1 welcome screen
+const TOTAL_STEPS = 17; // 14 questions + 2 contact info steps + 1 welcome screen
 const STORAGE_KEY_DATA = "tredfi-onboarding-data";
 const STORAGE_KEY_STEP = "tredfi-onboarding-step";
 
@@ -60,6 +70,12 @@ export default function Home() {
 
   const { register, handleSubmit, watch, setValue, reset, formState: { errors } } = useForm<FormData>({
     defaultValues: {
+      dealershipName: "",
+      dealershipAddress: "",
+      dealershipPhone: "",
+      primaryContactName: "",
+      primaryContactEmail: "",
+      primaryContactCell: "",
       crmNotApplicable: false,
       dmsNotApplicable: false,
       websiteNotApplicable: false,
@@ -70,6 +86,10 @@ export default function Home() {
       subprimeNotApplicable: false,
       salesProcessNotApplicable: false,
       rehashingNotApplicable: false,
+      platformName: "",
+      colorScheme: "",
+      tireWheelSales: "",
+      platformUsage: "",
     }
   });
 
@@ -390,10 +410,93 @@ export default function Home() {
               </motion.div>
             )}
 
-            {/* Step 1: CRM */}
+            {/* Step 1: Dealership Information */}
             {currentStep === 1 && (
               <FormStep
                 key="step1"
+                title="Dealership Information"
+                description="Tell us about your dealership so we can personalize your setup."
+                onNext={nextStep}
+                onPrev={prevStep}
+              >
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="dealershipName">Dealership Name *</Label>
+                    <Input 
+                      id="dealershipName" 
+                      placeholder="e.g., Smith Auto Group" 
+                      {...register("dealershipName", { required: true })} 
+                      className="h-12 text-lg"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="dealershipAddress">Dealership Address *</Label>
+                    <Textarea 
+                      id="dealershipAddress" 
+                      placeholder="123 Main Street, City, State, ZIP" 
+                      {...register("dealershipAddress", { required: true })} 
+                      className="min-h-[80px] text-base resize-none"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="dealershipPhone">Dealership Phone *</Label>
+                    <Input 
+                      id="dealershipPhone" 
+                      placeholder="(555) 123-4567" 
+                      {...register("dealershipPhone", { required: true })} 
+                      className="h-12 text-lg"
+                    />
+                  </div>
+                </div>
+              </FormStep>
+            )}
+
+            {/* Step 2: Primary Contact Information */}
+            {currentStep === 16 && (
+              <FormStep
+                key="step16"
+                title="Primary Contact Information"
+                description="Who should we reach out to for setup and implementation?"
+                onNext={nextStep}
+                onPrev={prevStep}
+              >
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="primaryContactName">Contact Name *</Label>
+                    <Input 
+                      id="primaryContactName" 
+                      placeholder="John Smith" 
+                      {...register("primaryContactName", { required: true })} 
+                      className="h-12 text-lg"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="primaryContactEmail">Email Address *</Label>
+                    <Input 
+                      id="primaryContactEmail" 
+                      type="email"
+                      placeholder="john@dealership.com" 
+                      {...register("primaryContactEmail", { required: true })} 
+                      className="h-12 text-lg"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="primaryContactCell">Cell Phone *</Label>
+                    <Input 
+                      id="primaryContactCell" 
+                      placeholder="(555) 987-6543" 
+                      {...register("primaryContactCell", { required: true })} 
+                      className="h-12 text-lg"
+                    />
+                  </div>
+                </div>
+              </FormStep>
+            )}
+
+            {/* Step 3: CRM */}
+            {currentStep === 15 && (
+              <FormStep
+                key="step15"
                 title="CRM System"
                 description="Which Customer Relationship Management software do you currently use?"
                 onNext={nextStep}
@@ -425,9 +528,9 @@ export default function Home() {
             )}
 
             {/* Step 2: DMS */}
-            {currentStep === 2 && (
+            {currentStep === 16 && (
               <FormStep
-                key="step2"
+                key="step16"
                 title="Dealer Management System (DMS)"
                 description="What system do you use for managing your inventory and deals?"
                 onNext={nextStep}
@@ -459,9 +562,9 @@ export default function Home() {
             )}
 
             {/* Step 3: Website */}
-            {currentStep === 3 && (
+            {currentStep === 15 && (
               <FormStep
-                key="step3"
+                key="step15"
                 title="Website Provider"
                 description="Who currently hosts and manages your dealership's website?"
                 onNext={nextStep}
@@ -493,9 +596,9 @@ export default function Home() {
             )}
 
             {/* Step 4: Third-party Vendors */}
-            {currentStep === 4 && (
+            {currentStep === 16 && (
               <FormStep
-                key="step4"
+                key="step16"
                 title="Third-Party Vendors"
                 description="Are there any other key software vendors or tools integrated into your workflow?"
                 onNext={nextStep}
@@ -527,9 +630,9 @@ export default function Home() {
             )}
 
             {/* Step 5: Facebook Ads */}
-            {currentStep === 5 && (
+            {currentStep === 15 && (
               <FormStep
-                key="step5"
+                key="step15"
                 title="Facebook Advertising"
                 description="Do you currently run Facebook Ads? If so, who manages them?"
                 onNext={nextStep}
@@ -561,9 +664,9 @@ export default function Home() {
             )}
 
             {/* Step 6: Marketplace Platforms */}
-            {currentStep === 6 && (
+            {currentStep === 16 && (
               <FormStep
-                key="step6"
+                key="step16"
                 title="Marketplace Platforms"
                 description="Where do you post your inventory online besides your own website?"
                 onNext={nextStep}
@@ -595,9 +698,9 @@ export default function Home() {
             )}
 
             {/* Step 7: Backend Products */}
-            {currentStep === 7 && (
+            {currentStep === 15 && (
               <FormStep
-                key="step7"
+                key="step15"
                 title="Backend Products"
                 description="What F&I products do you sell (warranties, GAP, etc.) and who are the providers?"
                 onNext={nextStep}
@@ -629,9 +732,9 @@ export default function Home() {
             )}
 
             {/* Step 8: Subprime Lenders */}
-            {currentStep === 8 && (
+            {currentStep === 16 && (
               <FormStep
-                key="step8"
+                key="step16"
                 title="Subprime Lenders"
                 description="Which lenders do you work with for subprime or special finance deals?"
                 onNext={nextStep}
@@ -663,9 +766,9 @@ export default function Home() {
             )}
 
             {/* Step 9: Sales Process */}
-            {currentStep === 9 && (
+            {currentStep === 15 && (
               <FormStep
-                key="step9"
+                key="step15"
                 title="Sales Process Structure"
                 description="How is your sales team structured? Do you have a traditional Sales Manager to F&I Manager handoff?"
                 onNext={nextStep}
@@ -697,15 +800,13 @@ export default function Home() {
             )}
 
             {/* Step 10: Rehashing Lenders */}
-            {currentStep === 10 && (
+            {currentStep === 16 && (
               <FormStep
-                key="step10"
+                key="step16"
                 title="Rehashing Lenders"
                 description="Which lenders allow you to rehash deals (negotiate terms after initial approval)?"
-                onNext={() => {}} // Handled by submit button
+                onNext={nextStep}
                 onPrev={prevStep}
-                isLastStep={true}
-                isSubmitting={isSubmitting}
               >
                 <div className="space-y-4">
                   <div className="space-y-2">
@@ -727,6 +828,284 @@ export default function Home() {
                     <Label htmlFor="rehashingNotApplicable" className="font-normal text-muted-foreground cursor-pointer">
                       We don't rehash deals / Not Applicable
                     </Label>
+                  </div>
+                </div>
+              </FormStep>
+            )}
+
+            {/* Step 11: Platform Name */}
+            {currentStep === 15 && (
+              <FormStep
+                key="step15"
+                title="Platform Name"
+                description="What would you like to name your custom platform? (We can help you brainstorm!)"
+                onNext={nextStep}
+                onPrev={prevStep}
+              >
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="platformName">Platform Name</Label>
+                    <Input 
+                      id="platformName" 
+                      placeholder="e.g., AutoDealPro, DriveConnect, DealFlow" 
+                      {...register("platformName")} 
+                      className="h-12 text-lg"
+                    />
+                  </div>
+                  <div className="bg-primary/5 p-4 rounded-lg border border-primary/20">
+                    <p className="text-sm font-medium text-foreground mb-2">💡 AI Suggestions:</p>
+                    <div className="flex flex-wrap gap-2">
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => setValue("platformName", "DealFlow Pro")}
+                        className="text-xs"
+                      >
+                        DealFlow Pro
+                      </Button>
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => setValue("platformName", "AutoConnect Hub")}
+                        className="text-xs"
+                      >
+                        AutoConnect Hub
+                      </Button>
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => setValue("platformName", "DriveSync Platform")}
+                        className="text-xs"
+                      >
+                        DriveSync Platform
+                      </Button>
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => setValue("platformName", "DealerEdge")}
+                        className="text-xs"
+                      >
+                        DealerEdge
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </FormStep>
+            )}
+
+            {/* Step 12: Color Scheme */}
+            {currentStep === 16 && (
+              <FormStep
+                key="step16"
+                title="Color Scheme"
+                description="Choose a color scheme that matches your dealership's brand identity."
+                onNext={nextStep}
+                onPrev={prevStep}
+              >
+                <div className="space-y-4">
+                  <div className="space-y-3">
+                    <Label>Select Your Preferred Color Scheme</Label>
+                    <div className="grid grid-cols-2 gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setValue("colorScheme", "Professional Blue")}
+                        className={`p-4 rounded-lg border-2 transition-all hover:scale-105 ${
+                          watchAllFields.colorScheme === "Professional Blue" 
+                            ? "border-primary bg-primary/10" 
+                            : "border-border bg-card"
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 rounded-md bg-gradient-to-br from-blue-600 to-blue-800 shadow-md"></div>
+                          <div className="text-left">
+                            <p className="font-medium text-sm">Professional Blue</p>
+                            <p className="text-xs text-muted-foreground">Trust & Reliability</p>
+                          </div>
+                        </div>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setValue("colorScheme", "Bold Red")}
+                        className={`p-4 rounded-lg border-2 transition-all hover:scale-105 ${
+                          watchAllFields.colorScheme === "Bold Red" 
+                            ? "border-primary bg-primary/10" 
+                            : "border-border bg-card"
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 rounded-md bg-gradient-to-br from-red-600 to-red-800 shadow-md"></div>
+                          <div className="text-left">
+                            <p className="font-medium text-sm">Bold Red</p>
+                            <p className="text-xs text-muted-foreground">Energy & Action</p>
+                          </div>
+                        </div>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setValue("colorScheme", "Luxury Black & Gold")}
+                        className={`p-4 rounded-lg border-2 transition-all hover:scale-105 ${
+                          watchAllFields.colorScheme === "Luxury Black & Gold" 
+                            ? "border-primary bg-primary/10" 
+                            : "border-border bg-card"
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 rounded-md bg-gradient-to-br from-gray-900 via-gray-800 to-yellow-600 shadow-md"></div>
+                          <div className="text-left">
+                            <p className="font-medium text-sm">Luxury Black & Gold</p>
+                            <p className="text-xs text-muted-foreground">Premium & Elegant</p>
+                          </div>
+                        </div>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setValue("colorScheme", "Modern Green")}
+                        className={`p-4 rounded-lg border-2 transition-all hover:scale-105 ${
+                          watchAllFields.colorScheme === "Modern Green" 
+                            ? "border-primary bg-primary/10" 
+                            : "border-border bg-card"
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 rounded-md bg-gradient-to-br from-green-600 to-green-800 shadow-md"></div>
+                          <div className="text-left">
+                            <p className="font-medium text-sm">Modern Green</p>
+                            <p className="text-xs text-muted-foreground">Growth & Innovation</p>
+                          </div>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="colorSchemeCustom">Or Enter Custom Colors</Label>
+                    <Input 
+                      id="colorSchemeCustom" 
+                      placeholder="e.g., Navy Blue & Silver" 
+                      value={watchAllFields.colorScheme}
+                      onChange={(e) => setValue("colorScheme", e.target.value)}
+                      className="h-12 text-lg"
+                    />
+                  </div>
+                </div>
+              </FormStep>
+            )}
+
+            {/* Step 13: Tire & Wheel Sales */}
+            {currentStep === 15 && (
+              <FormStep
+                key="step15"
+                title="Tire & Wheel Sales"
+                description="Do you want to add tire and wheel sales to your platform?"
+                onNext={nextStep}
+                onPrev={prevStep}
+              >
+                <div className="space-y-4">
+                  <div className="space-y-3">
+                    <Label>Tire & Wheel Sales Feature</Label>
+                    <div className="grid grid-cols-1 gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setValue("tireWheelSales", "Yes - Full Integration")}
+                        className={`p-4 rounded-lg border-2 text-left transition-all hover:scale-[1.02] ${
+                          watchAllFields.tireWheelSales === "Yes - Full Integration" 
+                            ? "border-primary bg-primary/10" 
+                            : "border-border bg-card"
+                        }`}
+                      >
+                        <p className="font-medium">Yes - Full Integration</p>
+                        <p className="text-sm text-muted-foreground">Complete tire & wheel catalog with inventory management</p>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setValue("tireWheelSales", "Yes - Basic Catalog")}
+                        className={`p-4 rounded-lg border-2 text-left transition-all hover:scale-[1.02] ${
+                          watchAllFields.tireWheelSales === "Yes - Basic Catalog" 
+                            ? "border-primary bg-primary/10" 
+                            : "border-border bg-card"
+                        }`}
+                      >
+                        <p className="font-medium">Yes - Basic Catalog</p>
+                        <p className="text-sm text-muted-foreground">Simple tire & wheel listings without inventory tracking</p>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setValue("tireWheelSales", "No")}
+                        className={`p-4 rounded-lg border-2 text-left transition-all hover:scale-[1.02] ${
+                          watchAllFields.tireWheelSales === "No" 
+                            ? "border-primary bg-primary/10" 
+                            : "border-border bg-card"
+                        }`}
+                      >
+                        <p className="font-medium">No</p>
+                        <p className="text-sm text-muted-foreground">We don't sell tires & wheels</p>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </FormStep>
+            )}
+
+            {/* Step 14: Platform Usage */}
+            {currentStep === 16 && (
+              <FormStep
+                key="step16"
+                title="Platform Usage Strategy"
+                description="Will you keep the platform in-house or advertise it publicly?"
+                onNext={() => {}} // Handled by submit button
+                onPrev={prevStep}
+                isLastStep={true}
+                isSubmitting={isSubmitting}
+              >
+                <div className="space-y-4">
+                  <div className="space-y-3">
+                    <Label>Platform Visibility</Label>
+                    <div className="grid grid-cols-1 gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setValue("platformUsage", "In-House Only")}
+                        className={`p-4 rounded-lg border-2 text-left transition-all hover:scale-[1.02] ${
+                          watchAllFields.platformUsage === "In-House Only" 
+                            ? "border-primary bg-primary/10" 
+                            : "border-border bg-card"
+                        }`}
+                      >
+                        <p className="font-medium">In-House Only</p>
+                        <p className="text-sm text-muted-foreground">Internal tool for staff and existing customers only</p>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setValue("platformUsage", "Public Marketing")}
+                        className={`p-4 rounded-lg border-2 text-left transition-all hover:scale-[1.02] ${
+                          watchAllFields.platformUsage === "Public Marketing" 
+                            ? "border-primary bg-primary/10" 
+                            : "border-border bg-card"
+                        }`}
+                      >
+                        <p className="font-medium">Public Marketing</p>
+                        <p className="text-sm text-muted-foreground">Advertise publicly to attract new customers</p>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setValue("platformUsage", "Hybrid Approach")}
+                        className={`p-4 rounded-lg border-2 text-left transition-all hover:scale-[1.02] ${
+                          watchAllFields.platformUsage === "Hybrid Approach" 
+                            ? "border-primary bg-primary/10" 
+                            : "border-border bg-card"
+                        }`}
+                      >
+                        <p className="font-medium">Hybrid Approach</p>
+                        <p className="text-sm text-muted-foreground">Start in-house, expand to public later</p>
+                      </button>
+                    </div>
+                  </div>
+                  <div className="bg-primary/5 p-4 rounded-lg border border-primary/20">
+                    <p className="text-sm text-muted-foreground">
+                      💡 <span className="font-medium text-foreground">Tip:</span> Public marketing can increase lead generation by up to 40%, while in-house keeps operations streamlined.
+                    </p>
                   </div>
                 </div>
               </FormStep>

@@ -32,10 +32,15 @@ export type InsertUser = typeof users.$inferInsert;
 export const onboardingSubmissions = mysqlTable("onboarding_submissions", {
   id: int("id").autoincrement().primaryKey(),
   
-  // Dealership contact info
+  // Dealership info
   dealershipName: varchar("dealership_name", { length: 255 }),
-  contactEmail: varchar("contact_email", { length: 320 }),
-  contactPhone: varchar("contact_phone", { length: 50 }),
+  dealershipAddress: text("dealership_address"),
+  dealershipPhone: varchar("dealership_phone", { length: 50 }),
+  
+  // Primary contact info
+  primaryContactName: varchar("primary_contact_name", { length: 255 }),
+  primaryContactEmail: varchar("primary_contact_email", { length: 320 }),
+  primaryContactCell: varchar("primary_contact_cell", { length: 50 }),
   
   // Form responses
   crmName: text("crm_name"),
@@ -67,6 +72,12 @@ export const onboardingSubmissions = mysqlTable("onboarding_submissions", {
   
   rehashingLenders: text("rehashing_lenders"),
   rehashingNotApplicable: int("rehashing_not_applicable").default(0).notNull(),
+  
+  // Platform customization
+  platformName: varchar("platform_name", { length: 255 }),
+  colorScheme: varchar("color_scheme", { length: 100 }),
+  tireWheelSales: varchar("tire_wheel_sales", { length: 50 }),
+  platformUsage: varchar("platform_usage", { length: 100 }),
   
   // Metadata
   submittedAt: timestamp("submitted_at").defaultNow().notNull(),

@@ -26,8 +26,11 @@ export const appRouter = router({
     submit: publicProcedure
       .input(z.object({
         dealershipName: z.string().optional(),
-        contactEmail: z.string().email().optional(),
-        contactPhone: z.string().optional(),
+        dealershipAddress: z.string().optional(),
+        dealershipPhone: z.string().optional(),
+        primaryContactName: z.string().optional(),
+        primaryContactEmail: z.string().email().optional(),
+        primaryContactCell: z.string().optional(),
         crmName: z.string().optional(),
         crmNotApplicable: z.boolean(),
         dmsName: z.string().optional(),
@@ -48,6 +51,10 @@ export const appRouter = router({
         salesProcessNotApplicable: z.boolean(),
         rehashingLenders: z.string().optional(),
         rehashingNotApplicable: z.boolean(),
+        platformName: z.string().optional(),
+        colorScheme: z.string().optional(),
+        tireWheelSales: z.string().optional(),
+        platformUsage: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
         const db = await getDb();
@@ -60,8 +67,11 @@ export const appRouter = router({
 
         const result = await db.insert(onboardingSubmissions).values({
           dealershipName: input.dealershipName,
-          contactEmail: input.contactEmail,
-          contactPhone: input.contactPhone,
+          dealershipAddress: input.dealershipAddress,
+          dealershipPhone: input.dealershipPhone,
+          primaryContactName: input.primaryContactName,
+          primaryContactEmail: input.primaryContactEmail,
+          primaryContactCell: input.primaryContactCell,
           crmName: input.crmName,
           crmNotApplicable: input.crmNotApplicable ? 1 : 0,
           dmsName: input.dmsName,
@@ -82,6 +92,10 @@ export const appRouter = router({
           salesProcessNotApplicable: input.salesProcessNotApplicable ? 1 : 0,
           rehashingLenders: input.rehashingLenders,
           rehashingNotApplicable: input.rehashingNotApplicable ? 1 : 0,
+          platformName: input.platformName,
+          colorScheme: input.colorScheme,
+          tireWheelSales: input.tireWheelSales,
+          platformUsage: input.platformUsage,
         });
 
         return { success: true };

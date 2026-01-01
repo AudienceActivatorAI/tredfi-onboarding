@@ -15,6 +15,20 @@
       "when": 1767241402985,
       "tag": "0001_dark_the_leader",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1767241982854,
+      "tag": "0002_quick_ghost_rider",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1767242110233,
+      "tag": "0003_outstanding_venus",
+      "breakpoints": true
     }
   ]
 }

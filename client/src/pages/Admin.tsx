@@ -179,8 +179,8 @@ export default function Admin() {
                         <TableCell>{submission.dealershipName || "N/A"}</TableCell>
                         <TableCell>
                           <div className="text-sm">
-                            <div>{submission.contactEmail || "N/A"}</div>
-                            <div className="text-muted-foreground">{submission.contactPhone || ""}</div>
+                            <div>{submission.primaryContactEmail || "N/A"}</div>
+                            <div className="text-muted-foreground">{submission.primaryContactCell || ""}</div>
                           </div>
                         </TableCell>
                         <TableCell>
@@ -210,17 +210,40 @@ export default function Admin() {
                                 <div className="space-y-6 mt-4">
                                   {/* Contact Info */}
                                   <div>
-                                    <h3 className="font-semibold mb-2">Contact Information</h3>
+                                    <h3 className="font-semibold mb-2">Dealership Information</h3>
                                     <div className="grid grid-cols-2 gap-2 text-sm">
-                                      <div><span className="text-muted-foreground">Dealership:</span> {submission.dealershipName || "N/A"}</div>
-                                      <div><span className="text-muted-foreground">Email:</span> {submission.contactEmail || "N/A"}</div>
-                                      <div><span className="text-muted-foreground">Phone:</span> {submission.contactPhone || "N/A"}</div>
+                                      <div><span className="text-muted-foreground">Name:</span> {submission.dealershipName || "N/A"}</div>
+                                      <div><span className="text-muted-foreground">Phone:</span> {submission.dealershipPhone || "N/A"}</div>
+                                      <div className="col-span-2"><span className="text-muted-foreground">Address:</span> {submission.dealershipAddress || "N/A"}</div>
+                                    </div>
+
+                                    <h3 className="font-semibold mb-2 mt-4">Primary Contact</h3>
+                                    <div className="grid grid-cols-2 gap-2 text-sm">
+                                      <div><span className="text-muted-foreground">Name:</span> {submission.primaryContactName || "N/A"}</div>
+                                      <div><span className="text-muted-foreground">Email:</span> {submission.primaryContactEmail || "N/A"}</div>
+                                      <div><span className="text-muted-foreground">Cell:</span> {submission.primaryContactCell || "N/A"}</div>
                                     </div>
                                   </div>
 
                                   {/* Form Responses */}
                                   <div>
-                                    <h3 className="font-semibold mb-2">Form Responses</h3>
+                                    <h3 className="font-semibold mb-2">Platform Customization</h3>
+                                    <div className="space-y-3 text-sm mb-4">
+                                      <div>
+                                        <span className="font-medium">Platform Name:</span> {submission.platformName || "N/A"}
+                                      </div>
+                                      <div>
+                                        <span className="font-medium">Color Scheme:</span> {submission.colorScheme || "N/A"}
+                                      </div>
+                                      <div>
+                                        <span className="font-medium">Tire & Wheel Sales:</span> {submission.tireWheelSales || "N/A"}
+                                      </div>
+                                      <div>
+                                        <span className="font-medium">Platform Usage:</span> {submission.platformUsage || "N/A"}
+                                      </div>
+                                    </div>
+
+                                    <h3 className="font-semibold mb-2 mt-4">System Integrations</h3>
                                     <div className="space-y-3 text-sm">
                                       <div>
                                         <span className="font-medium">CRM:</span> {submission.crmNotApplicable ? "Not Applicable" : submission.crmName || "N/A"}

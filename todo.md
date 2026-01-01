@@ -10,3 +10,21 @@
 - [x] Add tRPC query to fetch all submissions
 - [x] Implement admin authentication check
 - [x] Test database save and admin dashboard functionality
+- [x] Update database schema to include dealership address field
+- [x] Update database schema to include primary contact name field
+- [x] Update frontend form to add dealership info step (name, address, phone)
+- [x] Update frontend form to add primary contact step (name, email, cell)
+- [x] Update tRPC router to handle new fields
+- [x] Update admin dashboard to display new fields
+- [x] Test new fields end-to-end
+- [x] Add platform name field to database schema
+- [x] Add color scheme preference field to database schema
+- [x] Add tire/wheel sales field to database schema
+- [x] Add platform usage (in-house vs advertise) field to database schema
+- [x] Update frontend to add platform name question with AI suggestions
+- [x] Update frontend to add color scheme question with color suggestions
+- [x] Update frontend to add tire/wheel sales question
+- [x] Update frontend to add platform usage question
+- [x] Update tRPC router for new fields
+- [x] Update admin dashboard to show new fields
+- [x] Test all new questions end-to-end
