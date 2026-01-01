@@ -8,8 +8,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, Check, ChevronLeft, ChevronRight, ShieldCheck } from "lucide-react";
-import { useState } from "react";
+import { ArrowRight, Check, ChevronLeft, ChevronRight, ShieldCheck, Save } from "lucide-react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -38,13 +38,16 @@ type FormData = {
 };
 
 const TOTAL_STEPS = 11; // 10 questions + 1 welcome screen
+const STORAGE_KEY_DATA = "tredfi-onboarding-data";
+const STORAGE_KEY_STEP = "tredfi-onboarding-step";
 
 export default function Home() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm<FormData>({
+  const { register, handleSubmit, watch, setValue, reset, formState: { errors } } = useForm<FormData>({
     defaultValues: {
       crmNotApplicable: false,
       dmsNotApplicable: false,
@@ -59,8 +62,45 @@ export default function Home() {
     }
   });
 
-  // Watch values to handle conditional disabling
+  // Watch values to handle conditional disabling and auto-save
   const watchAllFields = watch();
+
+  // Load saved data on mount
+  useEffect(() => {
+    const savedData = localStorage.getItem(STORAGE_KEY_DATA);
+    const savedStep = localStorage.getItem(STORAGE_KEY_STEP);
+
+    if (savedData) {
+      try {
+        const parsedData = JSON.parse(savedData);
+        reset(parsedData);
+        if (savedStep) {
+          setCurrentStep(Number(savedStep));
+        }
+        toast.info("Welcome back! We've restored your progress.", {
+          icon: <Save className="w-4 h-4" />,
+          duration: 4000,
+        });
+      } catch (e) {
+        console.error("Failed to parse saved data", e);
+      }
+    }
+    setIsLoaded(true);
+  }, [reset]);
+
+  // Save data on change
+  useEffect(() => {
+    if (isLoaded) {
+      localStorage.setItem(STORAGE_KEY_DATA, JSON.stringify(watchAllFields));
+    }
+  }, [watchAllFields, isLoaded]);
+
+  // Save step on change
+  useEffect(() => {
+    if (isLoaded) {
+      localStorage.setItem(STORAGE_KEY_STEP, String(currentStep));
+    }
+  }, [currentStep, isLoaded]);
 
   const nextStep = () => {
     if (currentStep < TOTAL_STEPS) {
@@ -79,6 +119,11 @@ export default function Home() {
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1500));
     console.log(data);
+    
+    // Clear local storage on success
+    localStorage.removeItem(STORAGE_KEY_DATA);
+    localStorage.removeItem(STORAGE_KEY_STEP);
+    
     setIsSubmitting(false);
     setIsSuccess(true);
     toast.success("Onboarding information submitted successfully!");
@@ -140,8 +185,13 @@ export default function Home() {
         <div className="flex items-center gap-2">
           <img src="/images/logo.png" alt="Tredfi Logo" className="h-10 w-auto object-contain" />
         </div>
-        <div className="text-sm text-muted-foreground font-medium">
-          {currentStep > 0 && `Step ${currentStep} of ${TOTAL_STEPS}`}
+        <div className="flex items-center gap-4">
+          <div className="hidden md:flex items-center text-xs text-muted-foreground bg-secondary/50 px-3 py-1 rounded-full">
+            <Save className="w-3 h-3 mr-1.5" /> Auto-save enabled
+          </div>
+          <div className="text-sm text-muted-foreground font-medium">
+            {currentStep > 0 && `Step ${currentStep} of ${TOTAL_STEPS}`}
+          </div>
         </div>
       </header>
 
