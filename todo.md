@@ -49,3 +49,6 @@
 - [x] Added clearProgress function to reset form
 - [x] Added Start Fresh button to welcome screen
 - [x] Fixed TOTAL_STEPS from 17 to 16
+- [x] Fix React controlled/uncontrolled input warning
+- [x] Ensure all form fields have proper default values in useForm
+- [x] Test form to verify warning is resolved
