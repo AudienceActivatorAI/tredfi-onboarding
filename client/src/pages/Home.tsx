@@ -1,4 +1,5 @@
 import { useAuth } from "@/_core/hooks/useAuth";
+import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -124,10 +125,26 @@ export default function Home() {
     }
   };
 
+  const submitMutation = trpc.onboarding.submit.useMutation({
+    onSuccess: () => {
+      // Clear local storage on success
+      localStorage.removeItem(STORAGE_KEY_DATA);
+      localStorage.removeItem(STORAGE_KEY_STEP);
+      
+      setIsSubmitting(false);
+      setIsSuccess(true);
+      toast.success("Onboarding information submitted successfully!");
+    },
+    onError: (error) => {
+      setIsSubmitting(false);
+      toast.error(`Submission failed: ${error.message}`);
+    },
+  });
+
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
     
-    // Simulate multi-step submission process
+    // Simulate multi-step submission process for UX
     setSubmissionStatus("Validating your responses...");
     await new Promise(resolve => setTimeout(resolve, 800));
     
@@ -140,15 +157,8 @@ export default function Home() {
     setSubmissionStatus("Finalizing setup...");
     await new Promise(resolve => setTimeout(resolve, 500));
 
-    console.log(data);
-    
-    // Clear local storage on success
-    localStorage.removeItem(STORAGE_KEY_DATA);
-    localStorage.removeItem(STORAGE_KEY_STEP);
-    
-    setIsSubmitting(false);
-    setIsSuccess(true);
-    toast.success("Onboarding information submitted successfully!");
+    // Actually submit to database
+    submitMutation.mutate(data);
   };
 
   // Calendly event listener

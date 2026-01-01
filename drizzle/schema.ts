@@ -25,4 +25,54 @@ export const users = mysqlTable("users", {
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
-// TODO: Add your tables here
+/**
+ * Onboarding submissions table
+ * Stores all dealership onboarding form responses
+ */
+export const onboardingSubmissions = mysqlTable("onboarding_submissions", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Dealership contact info
+  dealershipName: varchar("dealership_name", { length: 255 }),
+  contactEmail: varchar("contact_email", { length: 320 }),
+  contactPhone: varchar("contact_phone", { length: 50 }),
+  
+  // Form responses
+  crmName: text("crm_name"),
+  crmNotApplicable: int("crm_not_applicable").default(0).notNull(),
+  
+  dmsName: text("dms_name"),
+  dmsNotApplicable: int("dms_not_applicable").default(0).notNull(),
+  
+  websiteProvider: text("website_provider"),
+  websiteNotApplicable: int("website_not_applicable").default(0).notNull(),
+  
+  thirdPartyVendors: text("third_party_vendors"),
+  thirdPartyNotApplicable: int("third_party_not_applicable").default(0).notNull(),
+  
+  facebookAdsUsage: text("facebook_ads_usage"),
+  facebookAdsNotApplicable: int("facebook_ads_not_applicable").default(0).notNull(),
+  
+  marketplacePlatforms: text("marketplace_platforms"),
+  marketplaceNotApplicable: int("marketplace_not_applicable").default(0).notNull(),
+  
+  backendProducts: text("backend_products"),
+  backendNotApplicable: int("backend_not_applicable").default(0).notNull(),
+  
+  subprimeLenders: text("subprime_lenders"),
+  subprimeNotApplicable: int("subprime_not_applicable").default(0).notNull(),
+  
+  salesProcessStructure: text("sales_process_structure"),
+  salesProcessNotApplicable: int("sales_process_not_applicable").default(0).notNull(),
+  
+  rehashingLenders: text("rehashing_lenders"),
+  rehashingNotApplicable: int("rehashing_not_applicable").default(0).notNull(),
+  
+  // Metadata
+  submittedAt: timestamp("submitted_at").defaultNow().notNull(),
+  status: mysqlEnum("status", ["new", "in_progress", "completed"]).default("new").notNull(),
+  notes: text("notes"),
+});
+
+export type OnboardingSubmission = typeof onboardingSubmissions.$inferSelect;
+export type InsertOnboardingSubmission = typeof onboardingSubmissions.$inferInsert;
