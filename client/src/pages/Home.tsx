@@ -1,3 +1,4 @@
+import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -12,7 +13,7 @@ import { ArrowRight, Check, ChevronLeft, ChevronRight, ShieldCheck, Save, Loader
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+
 
 // Define the form data structure
 type FormData = {
@@ -43,15 +44,17 @@ const STORAGE_KEY_DATA = "tredfi-onboarding-data";
 const STORAGE_KEY_STEP = "tredfi-onboarding-step";
 
 export default function Home() {
+  // The userAuth hooks provides authentication state
+  // To implement login/logout functionality, simply call logout() or redirect to getLoginUrl()
+  let { user, loading, error, isAuthenticated, logout } = useAuth();
+
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionStatus, setSubmissionStatus] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   
-  // Scheduling state
-  const [date, setDate] = useState<Date | undefined>(new Date());
-  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  // Scheduling state - now using Calendly
   const [isScheduled, setIsScheduled] = useState(false);
 
   const { register, handleSubmit, watch, setValue, reset, formState: { errors } } = useForm<FormData>({
@@ -148,14 +151,20 @@ export default function Home() {
     toast.success("Onboarding information submitted successfully!");
   };
 
-  const handleSchedule = () => {
-    if (date && selectedTime) {
-      setIsScheduled(true);
-      toast.success(`Call scheduled for ${date.toLocaleDateString()} at ${selectedTime}`);
-    } else {
-      toast.error("Please select both a date and a time.");
-    }
-  };
+  // Calendly event listener
+  useEffect(() => {
+    const handleCalendlyEvent = (e: MessageEvent) => {
+      if (e.data.event && e.data.event.indexOf('calendly') === 0) {
+        if (e.data.event === 'calendly.event_scheduled') {
+          setIsScheduled(true);
+          toast.success("Your implementation call has been scheduled!");
+        }
+      }
+    };
+    
+    window.addEventListener('message', handleCalendlyEvent);
+    return () => window.removeEventListener('message', handleCalendlyEvent);
+  }, []);
 
   const progressPercentage = (currentStep / TOTAL_STEPS) * 100;
 
@@ -201,7 +210,7 @@ export default function Home() {
                     <div>
                       <h3 className="font-bold text-green-700">Call Confirmed!</h3>
                       <p className="text-sm text-green-800 mt-1">
-                        {date?.toLocaleDateString()} at {selectedTime}
+                        Your session has been booked successfully.
                       </p>
                     </div>
                     <p className="text-xs text-green-700/80">
@@ -215,7 +224,7 @@ export default function Home() {
                 </Button>
               </div>
 
-              {/* Right Side: Scheduler */}
+              {/* Right Side: Calendly Scheduler */}
               <div className="p-8 bg-secondary/20">
                 {!isScheduled ? (
                   <div className="h-full flex flex-col">
@@ -223,42 +232,16 @@ export default function Home() {
                       <Calendar className="w-5 h-5 text-primary" /> Schedule Your Call
                     </h3>
                     
-                    <div className="flex-1 flex flex-col gap-6">
-                      <div className="bg-card rounded-lg border border-border p-2 shadow-sm">
-                         <CalendarComponent
-                            mode="single"
-                            selected={date}
-                            onSelect={setDate}
-                            className="rounded-md border-none w-full flex justify-center"
-                          />
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label className="text-sm font-medium">Available Times ({date?.toLocaleDateString()})</Label>
-                        <div className="grid grid-cols-3 gap-2">
-                          {["9:00 AM", "10:30 AM", "1:00 PM", "2:30 PM", "4:00 PM"].map((time) => (
-                            <Button
-                              key={time}
-                              variant={selectedTime === time ? "default" : "outline"}
-                              size="sm"
-                              onClick={() => setSelectedTime(time)}
-                              className={selectedTime === time ? "bg-primary text-primary-foreground" : "hover:bg-primary/10"}
-                            >
-                              {time}
-                            </Button>
-                          ))}
-                        </div>
-                      </div>
+                    <div className="flex-1 rounded-lg overflow-hidden border border-border shadow-sm bg-card">
+                      <iframe
+                        src="https://calendly.com/james-tredfi/onboarding-session?embed_domain=localhost&embed_type=Inline&hide_gdpr_banner=1"
+                        width="100%"
+                        height="100%"
+                        frameBorder="0"
+                        title="Schedule your Tredfi onboarding session"
+                        className="min-h-[600px]"
+                      />
                     </div>
-
-                    <Button 
-                      className="w-full mt-6" 
-                      size="lg" 
-                      onClick={handleSchedule}
-                      disabled={!date || !selectedTime}
-                    >
-                      Confirm Appointment
-                    </Button>
                   </div>
                 ) : (
                   <div className="h-full flex flex-col items-center justify-center text-center space-y-4 p-4">
