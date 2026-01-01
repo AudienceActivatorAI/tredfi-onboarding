@@ -129,6 +129,60 @@ export const appRouter = router({
         return { success: true };
       }),
 
+    generateNames: publicProcedure
+      .input(z.object({
+        dealershipName: z.string(),
+      }))
+      .mutation(async ({ input }) => {
+        try {
+          const response = await fetch(`${process.env.BUILT_IN_FORGE_API_URL}/chat/completions`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${process.env.BUILT_IN_FORGE_API_KEY}`,
+            },
+            body: JSON.stringify({
+              model: 'gpt-4o-mini',
+              messages: [
+                {
+                  role: 'system',
+                  content: 'You are a creative branding expert specializing in automotive dealership platforms. Generate 5 catchy, professional platform names that are modern, memorable, and relevant to car sales and dealership operations. Return only a JSON array of 5 strings, no additional text.',
+                },
+                {
+                  role: 'user',
+                  content: `Generate 5 platform name suggestions for ${input.dealershipName}. The platform helps dealerships sell cars smarter. Names should be short (1-3 words), professional, and automotive-related.`,
+                },
+              ],
+              temperature: 0.9,
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error(`API request failed: ${response.statusText}`);
+          }
+
+          const data = await response.json();
+          const content = data.choices[0].message.content;
+          
+          // Parse the JSON array from the response
+          const suggestions = JSON.parse(content);
+          
+          return { suggestions };
+        } catch (error) {
+          console.error('Failed to generate names:', error);
+          // Return fallback suggestions if AI fails
+          return {
+            suggestions: [
+              `${input.dealershipName} Pro`,
+              `${input.dealershipName} Connect`,
+              `${input.dealershipName} Hub`,
+              `${input.dealershipName} Platform`,
+              `${input.dealershipName} Direct`,
+            ],
+          };
+        }
+      }),
+
     list: protectedProcedure.query(async ({ ctx }) => {
       // Only allow admins to view submissions
       if (ctx.user.role !== 'admin') {

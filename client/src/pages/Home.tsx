@@ -67,6 +67,10 @@ export default function Home() {
   
   // Scheduling state - now using Calendly
   const [isScheduled, setIsScheduled] = useState(false);
+  
+  // AI name generation state
+  const [nameSuggestions, setNameSuggestions] = useState<string[]>([]);
+  const [isGeneratingNames, setIsGeneratingNames] = useState(false);
 
   const { register, handleSubmit, watch, setValue, reset, formState: { errors } } = useForm<FormData>({
     defaultValues: {
@@ -162,6 +166,8 @@ export default function Home() {
     reset();
     toast.success("Progress cleared! Starting fresh.");
   };
+
+  const generateNamesMutation = trpc.onboarding.generateNames.useMutation();
 
   const submitMutation = trpc.onboarding.submit.useMutation({
     onSuccess: () => {
@@ -878,45 +884,65 @@ export default function Home() {
                     />
                   </div>
                   <div className="bg-primary/5 p-4 rounded-lg border border-primary/20">
-                    <p className="text-sm font-medium text-foreground mb-2">💡 AI Suggestions:</p>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex items-center justify-between mb-3">
+                      <p className="text-sm font-medium text-foreground">💡 AI Suggestions:</p>
                       <Button 
                         type="button" 
                         variant="outline" 
                         size="sm"
-                        onClick={() => setValue("platformName", "DealFlow Pro")}
+                        onClick={async () => {
+                          const dealershipName = watchAllFields.dealershipName;
+                          if (!dealershipName) {
+                            toast.error("Please enter your dealership name first");
+                            return;
+                          }
+                          setIsGeneratingNames(true);
+                          generateNamesMutation.mutate(
+                            { dealershipName },
+                            {
+                              onSuccess: (result) => {
+                                setNameSuggestions(result.suggestions);
+                                toast.success("Generated 5 unique platform names!");
+                                setIsGeneratingNames(false);
+                              },
+                              onError: () => {
+                                toast.error("Failed to generate names. Please try again.");
+                                setIsGeneratingNames(false);
+                              },
+                            }
+                          );
+                        }}
+                        disabled={isGeneratingNames}
                         className="text-xs"
                       >
-                        DealFlow Pro
-                      </Button>
-                      <Button 
-                        type="button" 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => setValue("platformName", "AutoConnect Hub")}
-                        className="text-xs"
-                      >
-                        AutoConnect Hub
-                      </Button>
-                      <Button 
-                        type="button" 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => setValue("platformName", "DriveSync Platform")}
-                        className="text-xs"
-                      >
-                        DriveSync Platform
-                      </Button>
-                      <Button 
-                        type="button" 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => setValue("platformName", "DealerEdge")}
-                        className="text-xs"
-                      >
-                        DealerEdge
+                        {isGeneratingNames ? (
+                          <>
+                            <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+                            Generating...
+                          </>
+                        ) : (
+                          "Generate Ideas"
+                        )}
                       </Button>
                     </div>
+                    {nameSuggestions.length > 0 ? (
+                      <div className="flex flex-wrap gap-2">
+                        {nameSuggestions.map((suggestion, index) => (
+                          <Button 
+                            key={index}
+                            type="button" 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => setValue("platformName", suggestion)}
+                            className="text-xs"
+                          >
+                            {suggestion}
+                          </Button>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-sm text-muted-foreground">Click "Generate Ideas" to get AI-powered platform name suggestions</p>
+                    )}
                   </div>
                 </div>
               </FormStep>

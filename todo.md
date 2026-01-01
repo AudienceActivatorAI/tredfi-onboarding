@@ -52,3 +52,8 @@
 - [x] Fix React controlled/uncontrolled input warning
 - [x] Ensure all form fields have proper default values in useForm
 - [x] Test form to verify warning is resolved
+- [x] Create tRPC endpoint for AI name generation using Manus Forge API
+- [x] Add "Generate Suggestions" button to platform name step
+- [x] Display AI-generated name suggestions with selection UI
+- [x] Allow users to select a suggestion or enter custom name
+- [x] Test AI name generation end-to-end
