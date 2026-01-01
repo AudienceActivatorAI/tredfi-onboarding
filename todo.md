@@ -28,3 +28,12 @@
 - [x] Update tRPC router for new fields
 - [x] Update admin dashboard to show new fields
 - [x] Test all new questions end-to-end
+- [x] Fix navigation issue - users getting stuck after first question
+- [x] Ensure back button works properly on all steps
+- [x] Install googleapis package for Google Sheets API
+- [x] Create Google Sheets service account credentials setup
+- [x] Add server-side function to append form data to Google Sheets
+- [x] Update form submission handler to call Google Sheets API
+- [x] Add error handling for Google Sheets API failures
+- [x] Create vitest test for Google Sheets integration
+- [x] Document Google Sheets setup instructions for user

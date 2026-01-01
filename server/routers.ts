@@ -7,6 +7,7 @@ import { getDb } from "./db";
 import { onboardingSubmissions } from "../drizzle/schema";
 import { desc, eq } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
+import { appendToGoogleSheet } from "./services/googleSheets";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -96,6 +97,33 @@ export const appRouter = router({
           colorScheme: input.colorScheme,
           tireWheelSales: input.tireWheelSales,
           platformUsage: input.platformUsage,
+        });
+
+        // Export to Google Sheets (non-blocking)
+        appendToGoogleSheet({
+          dealershipName: input.dealershipName || '',
+          dealershipAddress: input.dealershipAddress || '',
+          dealershipPhone: input.dealershipPhone || '',
+          primaryContactName: input.primaryContactName || '',
+          primaryContactEmail: input.primaryContactEmail || '',
+          primaryContactCell: input.primaryContactCell || '',
+          crmCompany: input.crmNotApplicable ? 'N/A' : (input.crmName || ''),
+          dmsCompany: input.dmsNotApplicable ? 'N/A' : (input.dmsName || ''),
+          websiteCompany: input.websiteNotApplicable ? 'N/A' : (input.websiteProvider || ''),
+          thirdPartyVendors: input.thirdPartyNotApplicable ? 'N/A' : (input.thirdPartyVendors || ''),
+          facebookAds: input.facebookAdsNotApplicable ? 'N/A' : (input.facebookAdsUsage || ''),
+          marketplacePlatforms: input.marketplaceNotApplicable ? 'N/A' : (input.marketplacePlatforms || ''),
+          backendProductSales: input.backendNotApplicable ? 'N/A' : (input.backendProducts || ''),
+          subprimeLenders: input.subprimeNotApplicable ? 'N/A' : (input.subprimeLenders || ''),
+          salesProcess: input.salesProcessNotApplicable ? 'N/A' : (input.salesProcessStructure || ''),
+          dealRehashLenders: input.rehashingNotApplicable ? 'N/A' : (input.rehashingLenders || ''),
+          platformName: input.platformName || '',
+          colorScheme: input.colorScheme || '',
+          tireWheelSales: input.tireWheelSales || '',
+          platformUsage: input.platformUsage || '',
+        }).catch(err => {
+          console.error('Failed to export to Google Sheets:', err);
+          // Don't fail the submission if Google Sheets export fails
         });
 
         return { success: true };
