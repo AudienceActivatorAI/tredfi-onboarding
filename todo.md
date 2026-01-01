@@ -41,3 +41,11 @@
 - [x] Add tRPC endpoint for CSV export
 - [x] Add Download CSV button to Admin dashboard
 - [x] Test CSV export functionality
+- [x] Debug form navigation issue - users stuck on step 2
+- [x] Check browser console for errors
+- [x] Review step 2 rendering logic in Home.tsx
+- [x] Fixed all step numbers to be sequential (were 15/16 repeated)
+- [x] Test form navigation flow end-to-end
+- [x] Added clearProgress function to reset form
+- [x] Added Start Fresh button to welcome screen
+- [x] Fixed TOTAL_STEPS from 17 to 16

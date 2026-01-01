@@ -10,7 +10,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, Check, ChevronLeft, ChevronRight, ShieldCheck, Save, Loader2, Calendar, Clock , Trash2} from "lucide-react";
+import { ArrowRight, Check, ChevronLeft, ChevronRight, ShieldCheck, Save, Loader2, Calendar, Clock } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -50,7 +50,7 @@ type FormData = {
   platformUsage: string;
 };
 
-const TOTAL_STEPS = 16; // 14 questions + 2 contact info steps + 1 welcome screen
+const TOTAL_STEPS = 17; // 14 questions + 2 contact info steps + 1 welcome screen
 const STORAGE_KEY_DATA = "tredfi-onboarding-data";
 const STORAGE_KEY_STEP = "tredfi-onboarding-step";
 
@@ -143,14 +143,6 @@ export default function Home() {
     if (currentStep > 0) {
       setCurrentStep(prev => prev - 1);
     }
-  };
-
-  const clearProgress = () => {
-    localStorage.removeItem(STORAGE_KEY_DATA);
-    localStorage.removeItem(STORAGE_KEY_STEP);
-    setCurrentStep(0);
-    reset();
-    toast.success("Progress cleared! Starting fresh.");
   };
 
   const submitMutation = trpc.onboarding.submit.useMutation({
@@ -412,13 +404,6 @@ export default function Home() {
                       <Button type="button" size="lg" onClick={nextStep} className="w-full group">
                         Let's Get Started <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                       </Button>
-                      
-                      {currentStep > 0 && (
-                        <Button type="button" variant="outline" size="sm" onClick={clearProgress} className="w-full mt-2">
-                          <Trash2 className="mr-2 w-4 h-4" />
-                          Start Fresh
-                        </Button>
-                      )}
                     </div>
                   </div>
                 </Card>
@@ -467,7 +452,7 @@ export default function Home() {
             )}
 
             {/* Step 2: Primary Contact Information */}
-            {currentStep === 2 && (
+            {currentStep === 16 && (
               <FormStep
                 key="step16"
                 title="Primary Contact Information"
@@ -509,7 +494,7 @@ export default function Home() {
             )}
 
             {/* Step 3: CRM */}
-            {currentStep === 3 && (
+            {currentStep === 15 && (
               <FormStep
                 key="step15"
                 title="CRM System"
@@ -543,7 +528,7 @@ export default function Home() {
             )}
 
             {/* Step 2: DMS */}
-            {currentStep === 4 && (
+            {currentStep === 16 && (
               <FormStep
                 key="step16"
                 title="Dealer Management System (DMS)"
@@ -577,7 +562,7 @@ export default function Home() {
             )}
 
             {/* Step 3: Website */}
-            {currentStep === 5 && (
+            {currentStep === 15 && (
               <FormStep
                 key="step15"
                 title="Website Provider"
@@ -611,7 +596,7 @@ export default function Home() {
             )}
 
             {/* Step 4: Third-party Vendors */}
-            {currentStep === 6 && (
+            {currentStep === 16 && (
               <FormStep
                 key="step16"
                 title="Third-Party Vendors"
@@ -645,7 +630,7 @@ export default function Home() {
             )}
 
             {/* Step 5: Facebook Ads */}
-            {currentStep === 7 && (
+            {currentStep === 15 && (
               <FormStep
                 key="step15"
                 title="Facebook Advertising"
@@ -679,7 +664,7 @@ export default function Home() {
             )}
 
             {/* Step 6: Marketplace Platforms */}
-            {currentStep === 8 && (
+            {currentStep === 16 && (
               <FormStep
                 key="step16"
                 title="Marketplace Platforms"
@@ -713,7 +698,7 @@ export default function Home() {
             )}
 
             {/* Step 7: Backend Products */}
-            {currentStep === 9 && (
+            {currentStep === 15 && (
               <FormStep
                 key="step15"
                 title="Backend Products"
@@ -747,7 +732,7 @@ export default function Home() {
             )}
 
             {/* Step 8: Subprime Lenders */}
-            {currentStep === 10 && (
+            {currentStep === 16 && (
               <FormStep
                 key="step16"
                 title="Subprime Lenders"
@@ -781,7 +766,7 @@ export default function Home() {
             )}
 
             {/* Step 9: Sales Process */}
-            {currentStep === 11 && (
+            {currentStep === 15 && (
               <FormStep
                 key="step15"
                 title="Sales Process Structure"
@@ -815,7 +800,7 @@ export default function Home() {
             )}
 
             {/* Step 10: Rehashing Lenders */}
-            {currentStep === 12 && (
+            {currentStep === 16 && (
               <FormStep
                 key="step16"
                 title="Rehashing Lenders"
@@ -849,7 +834,7 @@ export default function Home() {
             )}
 
             {/* Step 11: Platform Name */}
-            {currentStep === 13 && (
+            {currentStep === 15 && (
               <FormStep
                 key="step15"
                 title="Platform Name"
@@ -913,7 +898,7 @@ export default function Home() {
             )}
 
             {/* Step 12: Color Scheme */}
-            {currentStep === 14 && (
+            {currentStep === 16 && (
               <FormStep
                 key="step16"
                 title="Color Scheme"
