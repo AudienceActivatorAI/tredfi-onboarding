@@ -26,7 +26,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Loader2, Eye, CheckCircle2, Clock, AlertCircle } from "lucide-react";
+import { Loader2, Eye, CheckCircle2, Clock, AlertCircle, Download } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { getLoginUrl } from "@/const";
@@ -117,9 +117,87 @@ export default function Admin() {
             <h1 className="text-3xl font-bold font-serif text-foreground">Onboarding Submissions</h1>
             <p className="text-muted-foreground mt-1">Manage and review dealership onboarding responses</p>
           </div>
-          <Button variant="outline" onClick={() => setLocation("/")}>
-            Back to Form
-          </Button>
+          <div className="flex gap-2">
+            <Button 
+              variant="outline" 
+              onClick={() => {
+                if (!submissions || submissions.length === 0) {
+                  toast.error("No submissions to export");
+                  return;
+                }
+                
+                // Create CSV content
+                const headers = [
+                  "ID", "Status", "Created At", "Dealership Name", "Dealership Address", "Dealership Phone",
+                  "Primary Contact Name", "Primary Contact Email", "Primary Contact Cell",
+                  "CRM Company", "DMS Company", "Website Company", "Third Party Vendors",
+                  "Facebook Ads", "Marketplace Platforms", "Backend Product Sales",
+                  "Subprime Lenders", "Sales Process", "Deal Rehash Lenders",
+                  "Platform Name", "Color Scheme", "Tire/Wheel Sales", "Platform Usage"
+                ];
+                
+                const rows = submissions.map(sub => [
+                  sub.id,
+                  sub.status,
+                  new Date(sub.submittedAt).toLocaleString(),
+                  sub.dealershipName || '',
+                  sub.dealershipAddress || '',
+                  sub.dealershipPhone || '',
+                  sub.primaryContactName || '',
+                  sub.primaryContactEmail || '',
+                  sub.primaryContactCell || '',
+                  sub.crmNotApplicable ? 'N/A' : (sub.crmName || ''),
+                  sub.dmsNotApplicable ? 'N/A' : (sub.dmsName || ''),
+                  sub.websiteNotApplicable ? 'N/A' : (sub.websiteProvider || ''),
+                  sub.thirdPartyNotApplicable ? 'N/A' : (sub.thirdPartyVendors || ''),
+                  sub.facebookAdsNotApplicable ? 'N/A' : (sub.facebookAdsUsage || ''),
+                  sub.marketplaceNotApplicable ? 'N/A' : (sub.marketplacePlatforms || ''),
+                  sub.backendNotApplicable ? 'N/A' : (sub.backendProducts || ''),
+                  sub.subprimeNotApplicable ? 'N/A' : (sub.subprimeLenders || ''),
+                  sub.salesProcessNotApplicable ? 'N/A' : (sub.salesProcessStructure || ''),
+                  sub.rehashingNotApplicable ? 'N/A' : (sub.rehashingLenders || ''),
+                  sub.platformName || '',
+                  sub.colorScheme || '',
+                  sub.tireWheelSales || '',
+                  sub.platformUsage || ''
+                ]);
+                
+                // Escape CSV fields
+                const escapeCSV = (field: any) => {
+                  const str = String(field || '');
+                  if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+                    return `"${str.replace(/"/g, '""')}"`;
+                  }
+                  return str;
+                };
+                
+                const csvContent = [
+                  headers.map(escapeCSV).join(','),
+                  ...rows.map(row => row.map(escapeCSV).join(','))
+                ].join('\n');
+                
+                // Download CSV
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', `tredfi-onboarding-submissions-${new Date().toISOString().split('T')[0]}.csv`);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                toast.success(`Exported ${submissions.length} submissions to CSV`);
+              }}
+              disabled={!submissions || submissions.length === 0}
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Download CSV
+            </Button>
+            <Button variant="outline" onClick={() => setLocation("/")}>
+              Back to Form
+            </Button>
+          </div>
         </div>
 
         {/* Stats Cards */}

@@ -37,3 +37,7 @@
 - [x] Add error handling for Google Sheets API failures
 - [x] Create vitest test for Google Sheets integration
 - [x] Document Google Sheets setup instructions for user
+- [x] Create CSV utility function to convert submissions to CSV format
+- [x] Add tRPC endpoint for CSV export
+- [x] Add Download CSV button to Admin dashboard
+- [x] Test CSV export functionality
