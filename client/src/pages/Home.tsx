@@ -71,6 +71,7 @@ export default function Home() {
   // AI name generation state
   const [nameSuggestions, setNameSuggestions] = useState<string[]>([]);
   const [isGeneratingNames, setIsGeneratingNames] = useState(false);
+  const [nameKeywords, setNameKeywords] = useState("");
 
   const { register, handleSubmit, watch, setValue, reset, formState: { errors } } = useForm<FormData>({
     defaultValues: {
@@ -883,6 +884,19 @@ export default function Home() {
                       className="h-12 text-lg"
                     />
                   </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="nameKeywords" className="text-sm">
+                      Keywords (Optional)
+                      <span className="text-muted-foreground font-normal ml-2">Help the AI understand your brand</span>
+                    </Label>
+                    <Input 
+                      id="nameKeywords" 
+                      placeholder="e.g., fast, reliable, premium, innovative" 
+                      value={nameKeywords}
+                      onChange={(e) => setNameKeywords(e.target.value)}
+                      className="h-10"
+                    />
+                  </div>
                   <div className="bg-primary/5 p-4 rounded-lg border border-primary/20">
                     <div className="flex items-center justify-between mb-3">
                       <p className="text-sm font-medium text-foreground">💡 AI Suggestions:</p>
@@ -898,7 +912,10 @@ export default function Home() {
                           }
                           setIsGeneratingNames(true);
                           generateNamesMutation.mutate(
-                            { dealershipName },
+                            { 
+                              dealershipName,
+                              keywords: nameKeywords || undefined,
+                            },
                             {
                               onSuccess: (result) => {
                                 setNameSuggestions(result.suggestions);

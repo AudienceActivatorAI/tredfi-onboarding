@@ -57,3 +57,9 @@
 - [x] Display AI-generated name suggestions with selection UI
 - [x] Allow users to select a suggestion or enter custom name
 - [x] Test AI name generation end-to-end
+- [x] Add keyword input field to platform name step
+- [x] Update tRPC endpoint to accept optional keywords parameter
+- [x] Enhance AI prompt to incorporate user-provided keywords
+- [x] Update UI to show keywords are optional but helpful
+- [x] Update AI prompt to focus on subprime lending
+- [x] Test keyword-based name generation

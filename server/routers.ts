@@ -132,6 +132,7 @@ export const appRouter = router({
     generateNames: publicProcedure
       .input(z.object({
         dealershipName: z.string(),
+        keywords: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
         try {
@@ -146,11 +147,11 @@ export const appRouter = router({
               messages: [
                 {
                   role: 'system',
-                  content: 'You are a creative branding expert specializing in automotive dealership platforms. Generate 5 catchy, professional platform names that are modern, memorable, and relevant to car sales and dealership operations. Return only a JSON array of 5 strings, no additional text.',
+                  content: 'You are a creative branding expert specializing in automotive dealership platforms with a focus on subprime lending and automotive finance. Generate 5 catchy, professional platform names that are modern, memorable, and relevant to car sales, dealership operations, and subprime financing. Names should convey trust, accessibility, and financial solutions for customers with credit challenges. Return only a JSON array of 5 strings, no additional text.',
                 },
                 {
                   role: 'user',
-                  content: `Generate 5 platform name suggestions for ${input.dealershipName}. The platform helps dealerships sell cars smarter. Names should be short (1-3 words), professional, and automotive-related.`,
+                  content: `Generate 5 platform name suggestions for ${input.dealershipName}. The platform helps dealerships sell cars smarter with a focus on subprime lending and financing solutions for customers with credit challenges. Names should be short (1-3 words), professional, and convey trust and financial accessibility.${input.keywords ? ` Incorporate these keywords or themes: ${input.keywords}` : ''}`,
                 },
               ],
               temperature: 0.9,
