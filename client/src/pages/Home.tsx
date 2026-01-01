@@ -8,10 +8,11 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, Check, ChevronLeft, ChevronRight, ShieldCheck, Save, Loader2 } from "lucide-react";
+import { ArrowRight, Check, ChevronLeft, ChevronRight, ShieldCheck, Save, Loader2, Calendar, Clock } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 
 // Define the form data structure
 type FormData = {
@@ -47,6 +48,11 @@ export default function Home() {
   const [submissionStatus, setSubmissionStatus] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  
+  // Scheduling state
+  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [isScheduled, setIsScheduled] = useState(false);
 
   const { register, handleSubmit, watch, setValue, reset, formState: { errors } } = useForm<FormData>({
     defaultValues: {
@@ -142,6 +148,15 @@ export default function Home() {
     toast.success("Onboarding information submitted successfully!");
   };
 
+  const handleSchedule = () => {
+    if (date && selectedTime) {
+      setIsScheduled(true);
+      toast.success(`Call scheduled for ${date.toLocaleDateString()} at ${selectedTime}`);
+    } else {
+      toast.error("Please select both a date and a time.");
+    }
+  };
+
   const progressPercentage = (currentStep / TOTAL_STEPS) * 100;
 
   if (isSuccess) {
@@ -155,31 +170,109 @@ export default function Home() {
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="max-w-md w-full z-10"
+          className="max-w-4xl w-full z-10"
         >
-          <Card className="border-none shadow-2xl bg-card/95 backdrop-blur-sm">
-            <CardContent className="pt-10 pb-10 flex flex-col items-center text-center space-y-6">
-              <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                <img src="/images/success-illustration.png" alt="Success" className="w-20 h-20 object-contain" />
+          <Card className="border-none shadow-2xl bg-card/95 backdrop-blur-sm overflow-hidden">
+            <div className="grid md:grid-cols-2 gap-0">
+              {/* Left Side: Success Message */}
+              <div className="p-8 flex flex-col items-center text-center justify-center border-b md:border-b-0 md:border-r border-border/50">
+                <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                  <img src="/images/success-illustration.png" alt="Success" className="w-16 h-16 object-contain" />
+                </div>
+                <h2 className="text-3xl font-serif font-bold text-primary mb-2">You're All Set!</h2>
+                <p className="text-muted-foreground mb-6">
+                  We've received your details. Our team is analyzing your stack to build your custom plan.
+                </p>
+                
+                {!isScheduled ? (
+                  <div className="bg-secondary/50 p-4 rounded-xl w-full text-left space-y-2 border border-border/50 mb-6">
+                    <h3 className="font-semibold text-foreground flex items-center gap-2 text-sm">
+                      <Clock className="w-4 h-4 text-primary" /> Next Step: Implementation Call
+                    </h3>
+                    <p className="text-xs text-muted-foreground">
+                      Please select a time on the right to schedule your 1-on-1 setup session with a Tredfi expert.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="bg-green-500/10 p-6 rounded-xl w-full text-center space-y-3 border border-green-500/20 mb-6">
+                    <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center mx-auto text-green-600">
+                      <Calendar className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-green-700">Call Confirmed!</h3>
+                      <p className="text-sm text-green-800 mt-1">
+                        {date?.toLocaleDateString()} at {selectedTime}
+                      </p>
+                    </div>
+                    <p className="text-xs text-green-700/80">
+                      A calendar invitation has been sent to your email.
+                    </p>
+                  </div>
+                )}
+
+                <Button variant="outline" className="w-full" onClick={() => window.location.reload()}>
+                  Return to Dashboard
+                </Button>
               </div>
-              <h2 className="text-3xl font-serif font-bold text-primary">You're All Set!</h2>
-              <p className="text-muted-foreground text-lg">
-                Thank you for providing your dealership details. Our team is already reviewing your information to build your custom setup plan.
-              </p>
-              <div className="bg-secondary/50 p-6 rounded-xl w-full text-left space-y-3 border border-border/50">
-                <h3 className="font-semibold text-foreground flex items-center gap-2">
-                  <Check className="w-5 h-5 text-green-500" /> What happens next?
-                </h3>
-                <ul className="space-y-3 text-sm text-muted-foreground pl-7 list-disc">
-                  <li>We will analyze your current tech stack.</li>
-                  <li>A custom integration plan will be created.</li>
-                  <li>Expect an implementation call invite within <strong>48 hours</strong>.</li>
-                </ul>
+
+              {/* Right Side: Scheduler */}
+              <div className="p-8 bg-secondary/20">
+                {!isScheduled ? (
+                  <div className="h-full flex flex-col">
+                    <h3 className="font-serif font-bold text-xl mb-4 flex items-center gap-2">
+                      <Calendar className="w-5 h-5 text-primary" /> Schedule Your Call
+                    </h3>
+                    
+                    <div className="flex-1 flex flex-col gap-6">
+                      <div className="bg-card rounded-lg border border-border p-2 shadow-sm">
+                         <CalendarComponent
+                            mode="single"
+                            selected={date}
+                            onSelect={setDate}
+                            className="rounded-md border-none w-full flex justify-center"
+                          />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label className="text-sm font-medium">Available Times ({date?.toLocaleDateString()})</Label>
+                        <div className="grid grid-cols-3 gap-2">
+                          {["9:00 AM", "10:30 AM", "1:00 PM", "2:30 PM", "4:00 PM"].map((time) => (
+                            <Button
+                              key={time}
+                              variant={selectedTime === time ? "default" : "outline"}
+                              size="sm"
+                              onClick={() => setSelectedTime(time)}
+                              className={selectedTime === time ? "bg-primary text-primary-foreground" : "hover:bg-primary/10"}
+                            >
+                              {time}
+                            </Button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    <Button 
+                      className="w-full mt-6" 
+                      size="lg" 
+                      onClick={handleSchedule}
+                      disabled={!date || !selectedTime}
+                    >
+                      Confirm Appointment
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="h-full flex flex-col items-center justify-center text-center space-y-4 p-4">
+                    <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center animate-pulse">
+                      <Check className="w-8 h-8 text-primary" />
+                    </div>
+                    <h3 className="text-xl font-bold">Thank you!</h3>
+                    <p className="text-muted-foreground">
+                      Your implementation call is booked. We look forward to speaking with you soon.
+                    </p>
+                  </div>
+                )}
               </div>
-              <Button className="w-full mt-4" size="lg" onClick={() => window.location.reload()}>
-                Return to Dashboard
-              </Button>
-            </CardContent>
+            </div>
           </Card>
         </motion.div>
       </div>
