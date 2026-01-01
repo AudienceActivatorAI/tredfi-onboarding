@@ -138,8 +138,7 @@ export default function Home() {
       {/* Header */}
       <header className="w-full p-6 z-10 flex justify-between items-center container mx-auto">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-primary rounded-md flex items-center justify-center text-primary-foreground font-bold font-serif">T</div>
-          <span className="font-serif font-bold text-xl tracking-tight">Tredfi</span>
+          <img src="/images/logo.png" alt="Tredfi Logo" className="h-10 w-auto object-contain" />
         </div>
         <div className="text-sm text-muted-foreground font-medium">
           {currentStep > 0 && `Step ${currentStep} of ${TOTAL_STEPS}`}

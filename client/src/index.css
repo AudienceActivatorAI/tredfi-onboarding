@@ -46,19 +46,18 @@
 }
 
 :root {
-  /* Modern Professional / Clean Corporate Palette */
-  /* Primary: Deep Navy Blue (#0A2540) -> OKLCH: 0.25 0.06 260 */
-  /* Accent: Vibrant Teal (#00D4FF) -> OKLCH: 0.78 0.18 220 */
+  /* Tredfi Brand Palette */
+  /* Primary Blue: #0d45e6 -> OKLCH approx 0.45 0.26 265 */
   
-  --primary: oklch(0.25 0.06 260);
+  --primary: oklch(0.45 0.26 265);
   --primary-foreground: oklch(0.98 0 0);
   
-  --sidebar-primary: oklch(0.25 0.06 260);
+  --sidebar-primary: oklch(0.45 0.26 265);
   --sidebar-primary-foreground: oklch(0.98 0 0);
   
-  --chart-1: oklch(0.78 0.18 220); /* Teal */
+  --chart-1: oklch(0.45 0.26 265); /* Tredfi Blue */
   --chart-2: oklch(0.25 0.06 260); /* Navy */
-  --chart-3: oklch(0.60 0.15 240); /* Blue */
+  --chart-3: oklch(0.60 0.15 240); /* Lighter Blue */
   --chart-4: oklch(0.40 0.10 250); /* Dark Blue */
   --chart-5: oklch(0.85 0.10 200); /* Light Teal */
   
@@ -87,22 +86,22 @@
   
   --border: oklch(0.90 0.02 240);
   --input: oklch(0.90 0.02 240);
-  --ring: oklch(0.78 0.18 220); /* Teal ring for focus */
+  --ring: oklch(0.45 0.26 265); /* Tredfi Blue ring */
   
   --sidebar: oklch(0.98 0.01 240);
   --sidebar-foreground: oklch(0.20 0.03 260);
   --sidebar-accent: oklch(0.95 0.02 240);
   --sidebar-accent-foreground: oklch(0.25 0.06 260);
   --sidebar-border: oklch(0.90 0.02 240);
-  --sidebar-ring: oklch(0.78 0.18 220);
+  --sidebar-ring: oklch(0.45 0.26 265);
 }
 
 .dark {
-  --primary: oklch(0.78 0.18 220); /* Teal in dark mode */
-  --primary-foreground: oklch(0.15 0.04 260);
+  --primary: oklch(0.60 0.20 265); /* Lighter Tredfi Blue for dark mode */
+  --primary-foreground: oklch(0.98 0 0);
   
-  --sidebar-primary: oklch(0.78 0.18 220);
-  --sidebar-primary-foreground: oklch(0.15 0.04 260);
+  --sidebar-primary: oklch(0.60 0.20 265);
+  --sidebar-primary-foreground: oklch(0.98 0 0);
   
   --background: oklch(0.15 0.04 260); /* Dark Navy */
   --foreground: oklch(0.95 0.01 240);
@@ -127,9 +126,9 @@
   
   --border: oklch(0.30 0.06 260);
   --input: oklch(0.30 0.06 260);
-  --ring: oklch(0.78 0.18 220);
+  --ring: oklch(0.60 0.20 265);
   
-  --chart-1: oklch(0.78 0.18 220);
+  --chart-1: oklch(0.60 0.20 265);
   --chart-2: oklch(0.25 0.06 260);
   --chart-3: oklch(0.60 0.15 240);
   --chart-4: oklch(0.40 0.10 250);
@@ -140,7 +139,7 @@
   --sidebar-accent: oklch(0.25 0.06 260);
   --sidebar-accent-foreground: oklch(0.95 0.01 240);
   --sidebar-border: oklch(0.30 0.06 260);
-  --sidebar-ring: oklch(0.78 0.18 220);
+  --sidebar-ring: oklch(0.60 0.20 265);
 }
 
 @layer base {
