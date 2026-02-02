@@ -130,12 +130,12 @@ export default function Admin() {
                 const headers = [
                   "ID", "Status", "Created At", "Dealership Name", "Dealership Address", "Dealership Phone",
                   "Primary Contact Name", "Primary Contact Email", "Primary Contact Cell",
-                  "CRM Company", "DMS Company", "Website Company", "Third Party Vendors",
-                  "Facebook Ads", "Marketplace Platforms", "Backend Product Sales",
-                  "Subprime Lenders", "Sales Process", "Deal Rehash Lenders",
+                  "CRM Company", "CRM Lead Email", "DMS Company", "DMS Inventory Feed", "Website Company",
+                  "Website Conversion Tools", "Facebook Ads", "3rd Party Vendors",
+                  "Subprime Lenders", "Sales Process", "Special Finance Platform",
                   "Platform Name", "Color Scheme", "Tire/Wheel Sales", "Platform Usage"
                 ];
-                
+
                 const rows = submissions.map(sub => [
                   sub.id,
                   sub.status,
@@ -147,15 +147,16 @@ export default function Admin() {
                   sub.primaryContactEmail || '',
                   sub.primaryContactCell || '',
                   sub.crmNotApplicable ? 'N/A' : (sub.crmName || ''),
+                  sub.crmNotApplicable ? 'N/A' : (sub.crmLeadEmail || ''),
                   sub.dmsNotApplicable ? 'N/A' : (sub.dmsName || ''),
+                  sub.dmsNotApplicable ? 'N/A' : (sub.dmsInventoryFeed || ''),
                   sub.websiteNotApplicable ? 'N/A' : (sub.websiteProvider || ''),
                   sub.thirdPartyNotApplicable ? 'N/A' : (sub.thirdPartyVendors || ''),
                   sub.facebookAdsNotApplicable ? 'N/A' : (sub.facebookAdsUsage || ''),
                   sub.marketplaceNotApplicable ? 'N/A' : (sub.marketplacePlatforms || ''),
-                  sub.backendNotApplicable ? 'N/A' : (sub.backendProducts || ''),
                   sub.subprimeNotApplicable ? 'N/A' : (sub.subprimeLenders || ''),
                   sub.salesProcessNotApplicable ? 'N/A' : (sub.salesProcessStructure || ''),
-                  sub.rehashingNotApplicable ? 'N/A' : (sub.rehashingLenders || ''),
+                  sub.specialFinancePlatformNotApplicable ? 'N/A' : (sub.specialFinancePlatform || ''),
                   sub.platformName || '',
                   sub.colorScheme || '',
                   sub.tireWheelSales || '',
@@ -327,22 +328,25 @@ export default function Admin() {
                                         <span className="font-medium">CRM:</span> {submission.crmNotApplicable ? "Not Applicable" : submission.crmName || "N/A"}
                                       </div>
                                       <div>
+                                        <span className="font-medium">CRM Lead Email:</span> {submission.crmNotApplicable ? "Not Applicable" : submission.crmLeadEmail || "N/A"}
+                                      </div>
+                                      <div>
                                         <span className="font-medium">DMS:</span> {submission.dmsNotApplicable ? "Not Applicable" : submission.dmsName || "N/A"}
+                                      </div>
+                                      <div>
+                                        <span className="font-medium">DMS Inventory Feed:</span> {submission.dmsNotApplicable ? "Not Applicable" : submission.dmsInventoryFeed || "N/A"}
                                       </div>
                                       <div>
                                         <span className="font-medium">Website Provider:</span> {submission.websiteNotApplicable ? "Not Applicable" : submission.websiteProvider || "N/A"}
                                       </div>
                                       <div>
-                                        <span className="font-medium">Third-Party Vendors:</span> {submission.thirdPartyNotApplicable ? "Not Applicable" : submission.thirdPartyVendors || "N/A"}
+                                        <span className="font-medium">Website Conversion Tools:</span> {submission.thirdPartyNotApplicable ? "Not Applicable" : submission.thirdPartyVendors || "N/A"}
                                       </div>
                                       <div>
                                         <span className="font-medium">Facebook Ads:</span> {submission.facebookAdsNotApplicable ? "Not Applicable" : submission.facebookAdsUsage || "N/A"}
                                       </div>
                                       <div>
-                                        <span className="font-medium">Marketplace Platforms:</span> {submission.marketplaceNotApplicable ? "Not Applicable" : submission.marketplacePlatforms || "N/A"}
-                                      </div>
-                                      <div>
-                                        <span className="font-medium">Backend Products:</span> {submission.backendNotApplicable ? "Not Applicable" : submission.backendProducts || "N/A"}
+                                        <span className="font-medium">3rd Party Vendors:</span> {submission.marketplaceNotApplicable ? "Not Applicable" : submission.marketplacePlatforms || "N/A"}
                                       </div>
                                       <div>
                                         <span className="font-medium">Subprime Lenders:</span> {submission.subprimeNotApplicable ? "Not Applicable" : submission.subprimeLenders || "N/A"}
@@ -351,7 +355,7 @@ export default function Admin() {
                                         <span className="font-medium">Sales Process:</span> {submission.salesProcessNotApplicable ? "Not Applicable" : submission.salesProcessStructure || "N/A"}
                                       </div>
                                       <div>
-                                        <span className="font-medium">Rehashing Lenders:</span> {submission.rehashingNotApplicable ? "Not Applicable" : submission.rehashingLenders || "N/A"}
+                                        <span className="font-medium">Special Finance Platform:</span> {submission.specialFinancePlatformNotApplicable ? "Not Applicable" : submission.specialFinancePlatform || "N/A"}
                                       </div>
                                     </div>
                                   </div>

@@ -25,8 +25,10 @@ type FormData = {
   primaryContactEmail: string;
   primaryContactCell: string;
   crmName: string;
+  crmLeadEmail: string;
   crmNotApplicable: boolean;
   dmsName: string;
+  dmsInventoryFeed: string;
   dmsNotApplicable: boolean;
   websiteProvider: string;
   websiteNotApplicable: boolean;
@@ -36,21 +38,19 @@ type FormData = {
   facebookAdsNotApplicable: boolean;
   marketplacePlatforms: string;
   marketplaceNotApplicable: boolean;
-  backendProducts: string;
-  backendNotApplicable: boolean;
   subprimeLenders: string;
   subprimeNotApplicable: boolean;
   salesProcessStructure: string;
   salesProcessNotApplicable: boolean;
-  rehashingLenders: string;
-  rehashingNotApplicable: boolean;
+  specialFinancePlatform: string;
+  specialFinancePlatformNotApplicable: boolean;
   platformName: string;
   colorScheme: string;
   tireWheelSales: string;
   platformUsage: string;
 };
 
-const TOTAL_STEPS = 16; // 14 questions + 2 contact info steps + 1 welcome screen
+const TOTAL_STEPS = 15; // Updated flow with new fields and removed sections
 const STORAGE_KEY_DATA = "tredfi-onboarding-data";
 const STORAGE_KEY_STEP = "tredfi-onboarding-step";
 
@@ -82,8 +82,10 @@ export default function Home() {
       primaryContactEmail: "",
       primaryContactCell: "",
       crmName: "",
+      crmLeadEmail: "",
       crmNotApplicable: false,
       dmsName: "",
+      dmsInventoryFeed: "",
       dmsNotApplicable: false,
       websiteProvider: "",
       websiteNotApplicable: false,
@@ -93,14 +95,12 @@ export default function Home() {
       facebookAdsNotApplicable: false,
       marketplacePlatforms: "",
       marketplaceNotApplicable: false,
-      backendProducts: "",
-      backendNotApplicable: false,
       subprimeLenders: "",
       subprimeNotApplicable: false,
       salesProcessStructure: "",
       salesProcessNotApplicable: false,
-      rehashingLenders: "",
-      rehashingNotApplicable: false,
+      specialFinancePlatform: "",
+      specialFinancePlatformNotApplicable: false,
       platformName: "",
       colorScheme: "",
       tireWheelSales: "",
@@ -537,17 +537,28 @@ export default function Home() {
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="crmName">CRM Company Name</Label>
-                    <Input 
-                      id="crmName" 
-                      placeholder="e.g., VinSolutions, eLeads, DriveCentric" 
-                      {...register("crmName")} 
+                    <Input
+                      id="crmName"
+                      placeholder="e.g., VinSolutions, eLeads, DriveCentric"
+                      {...register("crmName")}
+                      disabled={watchAllFields.crmNotApplicable}
+                      className="h-12 text-lg"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="crmLeadEmail">Lead Email</Label>
+                    <Input
+                      id="crmLeadEmail"
+                      type="email"
+                      placeholder="e.g., leads@dealership.com"
+                      {...register("crmLeadEmail")}
                       disabled={watchAllFields.crmNotApplicable}
                       className="h-12 text-lg"
                     />
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Checkbox 
-                      id="crmNotApplicable" 
+                    <Checkbox
+                      id="crmNotApplicable"
                       onCheckedChange={(checked) => setValue("crmNotApplicable", checked as boolean)}
                       checked={watchAllFields.crmNotApplicable}
                     />
@@ -571,17 +582,27 @@ export default function Home() {
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="dmsName">DMS Provider</Label>
-                    <Input 
-                      id="dmsName" 
-                      placeholder="e.g., Reynolds & Reynolds, CDK, Dealertrack" 
-                      {...register("dmsName")} 
+                    <Input
+                      id="dmsName"
+                      placeholder="e.g., Reynolds & Reynolds, CDK, Dealertrack"
+                      {...register("dmsName")}
+                      disabled={watchAllFields.dmsNotApplicable}
+                      className="h-12 text-lg"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="dmsInventoryFeed">Inventory Feed Provider</Label>
+                    <Input
+                      id="dmsInventoryFeed"
+                      placeholder="e.g., vAuto, HomeNet, Dealer Specialties"
+                      {...register("dmsInventoryFeed")}
                       disabled={watchAllFields.dmsNotApplicable}
                       className="h-12 text-lg"
                     />
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Checkbox 
-                      id="dmsNotApplicable" 
+                    <Checkbox
+                      id="dmsNotApplicable"
                       onCheckedChange={(checked) => setValue("dmsNotApplicable", checked as boolean)}
                       checked={watchAllFields.dmsNotApplicable}
                     />
@@ -620,41 +641,41 @@ export default function Home() {
                       checked={watchAllFields.websiteNotApplicable}
                     />
                     <Label htmlFor="websiteNotApplicable" className="font-normal text-muted-foreground cursor-pointer">
-                      We don't have a website / Not Applicable
+                      Not Applicable
                     </Label>
                   </div>
                 </div>
               </FormStep>
             )}
 
-            {/* Step 4: Third-party Vendors */}
+            {/* Step 4: Website conversion tools */}
             {currentStep === 6 && (
               <FormStep
                 key="step16"
-                title="Third-Party Vendors"
-                description="Are there any other key software vendors or tools integrated into your workflow?"
+                title="Website conversion tools"
+                description="What conversion tools or widgets do you use on your website?"
                 onNext={nextStep}
                 onPrev={prevStep}
               >
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="thirdPartyVendors">Vendor Names</Label>
-                    <Textarea 
-                      id="thirdPartyVendors" 
-                      placeholder="List any other tools (e.g., chat tools, trade-in tools, merchandising software)..." 
-                      {...register("thirdPartyVendors")} 
+                    <Label htmlFor="thirdPartyVendors">Conversion Tools</Label>
+                    <Textarea
+                      id="thirdPartyVendors"
+                      placeholder="e.g., chat widgets, trade-in estimators, payment calculators, lead capture forms..."
+                      {...register("thirdPartyVendors")}
                       disabled={watchAllFields.thirdPartyNotApplicable}
                       className="min-h-[120px] text-base resize-none"
                     />
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Checkbox 
-                      id="thirdPartyNotApplicable" 
+                    <Checkbox
+                      id="thirdPartyNotApplicable"
                       onCheckedChange={(checked) => setValue("thirdPartyNotApplicable", checked as boolean)}
                       checked={watchAllFields.thirdPartyNotApplicable}
                     />
                     <Label htmlFor="thirdPartyNotApplicable" className="font-normal text-muted-foreground cursor-pointer">
-                      No other vendors / Not Applicable
+                      No conversion tools / Not Applicable
                     </Label>
                   </div>
                 </div>
@@ -695,11 +716,11 @@ export default function Home() {
               </FormStep>
             )}
 
-            {/* Step 6: Marketplace Platforms */}
+            {/* Step 6: 3rd party vendors */}
             {currentStep === 8 && (
               <FormStep
                 key="step16"
-                title="Marketplace Platforms"
+                title="3rd party vendors"
                 description="Where do you post your inventory online besides your own website?"
                 onNext={nextStep}
                 onPrev={prevStep}
@@ -729,42 +750,8 @@ export default function Home() {
               </FormStep>
             )}
 
-            {/* Step 7: Backend Products */}
-            {currentStep === 9 && (
-              <FormStep
-                key="step15"
-                title="Backend Products"
-                description="What F&I products do you sell (warranties, GAP, etc.) and who are the providers?"
-                onNext={nextStep}
-                onPrev={prevStep}
-              >
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="backendProducts">Products & Providers</Label>
-                    <Textarea 
-                      id="backendProducts" 
-                      placeholder="e.g., VSC provided by GWC, GAP provided by Allstate..." 
-                      {...register("backendProducts")} 
-                      disabled={watchAllFields.backendNotApplicable}
-                      className="min-h-[120px] text-base resize-none"
-                    />
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox 
-                      id="backendNotApplicable" 
-                      onCheckedChange={(checked) => setValue("backendNotApplicable", checked as boolean)}
-                      checked={watchAllFields.backendNotApplicable}
-                    />
-                    <Label htmlFor="backendNotApplicable" className="font-normal text-muted-foreground cursor-pointer">
-                      We don't sell backend products
-                    </Label>
-                  </div>
-                </div>
-              </FormStep>
-            )}
-
             {/* Step 8: Subprime Lenders */}
-            {currentStep === 10 && (
+            {currentStep === 9 && (
               <FormStep
                 key="step16"
                 title="Subprime Lenders"
@@ -798,7 +785,7 @@ export default function Home() {
             )}
 
             {/* Step 9: Sales Process */}
-            {currentStep === 11 && (
+            {currentStep === 10 && (
               <FormStep
                 key="step15"
                 title="Sales Process Structure"
@@ -831,34 +818,34 @@ export default function Home() {
               </FormStep>
             )}
 
-            {/* Step 10: Rehashing Lenders */}
-            {currentStep === 12 && (
+            {/* Step 10: Special Finance Platform */}
+            {currentStep === 11 && (
               <FormStep
-                key="step16"
-                title="Rehashing Lenders"
-                description="Which lenders allow you to rehash deals (negotiate terms after initial approval)?"
+                key="step11"
+                title="Special Finance Platform"
+                description="For dealers focused on special financing or using short-term loan programs."
                 onNext={nextStep}
                 onPrev={prevStep}
               >
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="rehashingLenders">Lender Names</Label>
-                    <Textarea 
-                      id="rehashingLenders" 
-                      placeholder="List lenders available for deal rehashing..." 
-                      {...register("rehashingLenders")} 
-                      disabled={watchAllFields.rehashingNotApplicable}
+                    <Label htmlFor="specialFinancePlatform">Platform Details</Label>
+                    <Textarea
+                      id="specialFinancePlatform"
+                      placeholder="e.g., Platform name, short-term loan program details..."
+                      {...register("specialFinancePlatform")}
+                      disabled={watchAllFields.specialFinancePlatformNotApplicable}
                       className="min-h-[120px] text-base resize-none"
                     />
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Checkbox 
-                      id="rehashingNotApplicable" 
-                      onCheckedChange={(checked) => setValue("rehashingNotApplicable", checked as boolean)}
-                      checked={watchAllFields.rehashingNotApplicable}
+                    <Checkbox
+                      id="specialFinancePlatformNotApplicable"
+                      onCheckedChange={(checked) => setValue("specialFinancePlatformNotApplicable", checked as boolean)}
+                      checked={watchAllFields.specialFinancePlatformNotApplicable}
                     />
-                    <Label htmlFor="rehashingNotApplicable" className="font-normal text-muted-foreground cursor-pointer">
-                      We don't rehash deals / Not Applicable
+                    <Label htmlFor="specialFinancePlatformNotApplicable" className="font-normal text-muted-foreground cursor-pointer">
+                      Not Applicable / We don't focus on special financing
                     </Label>
                   </div>
                 </div>
@@ -866,7 +853,7 @@ export default function Home() {
             )}
 
             {/* Step 11: Platform Name */}
-            {currentStep === 13 && (
+            {currentStep === 12 && (
               <FormStep
                 key="step15"
                 title="Platform Name"
@@ -966,7 +953,7 @@ export default function Home() {
             )}
 
             {/* Step 12: Color Scheme */}
-            {currentStep === 14 && (
+            {currentStep === 13 && (
               <FormStep
                 key="step16"
                 title="Color Scheme"
@@ -1063,7 +1050,7 @@ export default function Home() {
             )}
 
             {/* Step 13: Tire & Wheel Sales */}
-            {currentStep === 15 && (
+            {currentStep === 14 && (
               <FormStep
                 key="step15"
                 title="Tire & Wheel Sales"
@@ -1118,7 +1105,7 @@ export default function Home() {
             )}
 
             {/* Step 14: Platform Usage */}
-            {currentStep === 16 && (
+            {currentStep === 15 && (
               <FormStep
                 key="step16"
                 title="Platform Usage Strategy"

@@ -44,34 +44,33 @@ export const onboardingSubmissions = mysqlTable("onboarding_submissions", {
   
   // Form responses
   crmName: text("crm_name"),
+  crmLeadEmail: varchar("crm_lead_email", { length: 320 }),
   crmNotApplicable: int("crm_not_applicable").default(0).notNull(),
-  
+
   dmsName: text("dms_name"),
+  dmsInventoryFeed: text("dms_inventory_feed"),
   dmsNotApplicable: int("dms_not_applicable").default(0).notNull(),
-  
+
   websiteProvider: text("website_provider"),
   websiteNotApplicable: int("website_not_applicable").default(0).notNull(),
-  
+
   thirdPartyVendors: text("third_party_vendors"),
   thirdPartyNotApplicable: int("third_party_not_applicable").default(0).notNull(),
-  
+
   facebookAdsUsage: text("facebook_ads_usage"),
   facebookAdsNotApplicable: int("facebook_ads_not_applicable").default(0).notNull(),
-  
+
   marketplacePlatforms: text("marketplace_platforms"),
   marketplaceNotApplicable: int("marketplace_not_applicable").default(0).notNull(),
-  
-  backendProducts: text("backend_products"),
-  backendNotApplicable: int("backend_not_applicable").default(0).notNull(),
-  
+
   subprimeLenders: text("subprime_lenders"),
   subprimeNotApplicable: int("subprime_not_applicable").default(0).notNull(),
-  
+
   salesProcessStructure: text("sales_process_structure"),
   salesProcessNotApplicable: int("sales_process_not_applicable").default(0).notNull(),
-  
-  rehashingLenders: text("rehashing_lenders"),
-  rehashingNotApplicable: int("rehashing_not_applicable").default(0).notNull(),
+
+  specialFinancePlatform: text("special_finance_platform"),
+  specialFinancePlatformNotApplicable: int("special_finance_platform_not_applicable").default(0).notNull(),
   
   // Platform customization
   platformName: varchar("platform_name", { length: 255 }),

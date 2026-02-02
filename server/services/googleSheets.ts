@@ -8,15 +8,16 @@ interface FormSubmission {
   primaryContactEmail: string;
   primaryContactCell: string;
   crmCompany: string;
+  crmLeadEmail: string;
   dmsCompany: string;
+  dmsInventoryFeed: string;
   websiteCompany: string;
   thirdPartyVendors: string;
   facebookAds: string;
   marketplacePlatforms: string;
-  backendProductSales: string;
   subprimeLenders: string;
   salesProcess: string;
-  dealRehashLenders: string;
+  specialFinancePlatform: string;
   platformName: string;
   colorScheme: string;
   tireWheelSales: string;
@@ -53,15 +54,16 @@ export async function appendToGoogleSheet(submission: FormSubmission) {
       submission.primaryContactEmail,
       submission.primaryContactCell,
       submission.crmCompany,
+      submission.crmLeadEmail,
       submission.dmsCompany,
+      submission.dmsInventoryFeed,
       submission.websiteCompany,
       submission.thirdPartyVendors,
       submission.facebookAds,
       submission.marketplacePlatforms,
-      submission.backendProductSales,
       submission.subprimeLenders,
       submission.salesProcess,
-      submission.dealRehashLenders,
+      submission.specialFinancePlatform,
       submission.platformName,
       submission.colorScheme,
       submission.tireWheelSales,
@@ -71,7 +73,7 @@ export async function appendToGoogleSheet(submission: FormSubmission) {
     // Append the data to the sheet
     await sheets.spreadsheets.values.append({
       spreadsheetId,
-      range: 'Sheet1!A:U', // Adjust range as needed
+      range: 'Sheet1!A:V', // Updated range for new columns
       valueInputOption: 'RAW',
       requestBody: {
         values,
@@ -105,7 +107,7 @@ export async function initializeGoogleSheet() {
     // Check if the sheet has headers, if not, add them
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId,
-      range: 'Sheet1!A1:U1',
+      range: 'Sheet1!A1:V1',
     });
 
     if (!response.data.values || response.data.values.length === 0) {
@@ -119,15 +121,16 @@ export async function initializeGoogleSheet() {
         'Primary Contact Email',
         'Primary Contact Cell',
         'CRM Company',
+        'CRM Lead Email',
         'DMS Company',
+        'DMS Inventory Feed',
         'Website Company',
-        'Third Party Vendors',
+        'Website Conversion Tools',
         'Facebook Ads',
-        'Marketplace Platforms',
-        'Backend Product Sales',
+        '3rd Party Vendors',
         'Subprime Lenders',
         'Sales Process',
-        'Deal Rehash Lenders',
+        'Special Finance Platform',
         'Platform Name',
         'Color Scheme',
         'Tire/Wheel Sales',
@@ -136,7 +139,7 @@ export async function initializeGoogleSheet() {
 
       await sheets.spreadsheets.values.update({
         spreadsheetId,
-        range: 'Sheet1!A1:U1',
+        range: 'Sheet1!A1:V1',
         valueInputOption: 'RAW',
         requestBody: {
           values: headers,
