@@ -50,7 +50,7 @@ type FormData = {
   platformUsage: string;
 };
 
-const TOTAL_STEPS = 15; // Updated flow with new fields and removed sections
+const TOTAL_STEPS = 14; // Updated flow with decision card and removed Platform Name
 const STORAGE_KEY_DATA = "tredfi-onboarding-data";
 const STORAGE_KEY_STEP = "tredfi-onboarding-step";
 
@@ -818,142 +818,69 @@ export default function Home() {
               </FormStep>
             )}
 
-            {/* Step 10: Special Finance Platform */}
+            {/* Step 10: Special Finance Platform Decision */}
             {currentStep === 11 && (
-              <FormStep
+              <motion.div
                 key="step11"
-                title="Special Finance Platform"
-                description="For dealers focused on special financing or using short-term loan programs."
-                onNext={nextStep}
-                onPrev={prevStep}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+                className="w-full"
               >
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="specialFinancePlatform">Platform Details</Label>
-                    <Textarea
-                      id="specialFinancePlatform"
-                      placeholder="e.g., Platform name, short-term loan program details..."
-                      {...register("specialFinancePlatform")}
-                      disabled={watchAllFields.specialFinancePlatformNotApplicable}
-                      className="min-h-[120px] text-base resize-none"
-                    />
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="specialFinancePlatformNotApplicable"
-                      onCheckedChange={(checked) => setValue("specialFinancePlatformNotApplicable", checked as boolean)}
-                      checked={watchAllFields.specialFinancePlatformNotApplicable}
-                    />
-                    <Label htmlFor="specialFinancePlatformNotApplicable" className="font-normal text-muted-foreground cursor-pointer">
-                      Not Applicable / We don't focus on special financing
-                    </Label>
-                  </div>
-                </div>
-              </FormStep>
-            )}
-
-            {/* Step 11: Platform Name */}
-            {currentStep === 12 && (
-              <FormStep
-                key="step15"
-                title="Platform Name"
-                description="What would you like to name your custom platform? (We can help you brainstorm!)"
-                onNext={nextStep}
-                onPrev={prevStep}
-              >
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="platformName">Platform Name</Label>
-                    <Input 
-                      id="platformName" 
-                      placeholder="e.g., AutoDealPro, DriveConnect, DealFlow" 
-                      {...register("platformName")} 
-                      className="h-12 text-lg"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="nameKeywords" className="text-sm">
-                      Keywords (Optional)
-                      <span className="text-muted-foreground font-normal ml-2">Help the AI understand your brand</span>
-                    </Label>
-                    <Input 
-                      id="nameKeywords" 
-                      placeholder="e.g., fast, reliable, premium, innovative" 
-                      value={nameKeywords}
-                      onChange={(e) => setNameKeywords(e.target.value)}
-                      className="h-10"
-                    />
-                  </div>
-                  <div className="bg-primary/5 p-4 rounded-lg border border-primary/20">
-                    <div className="flex items-center justify-between mb-3">
-                      <p className="text-sm font-medium text-foreground">💡 AI Suggestions:</p>
-                      <Button 
-                        type="button" 
-                        variant="outline" 
-                        size="sm"
-                        onClick={async () => {
-                          const dealershipName = watchAllFields.dealershipName;
-                          if (!dealershipName) {
-                            toast.error("Please enter your dealership name first");
-                            return;
-                          }
-                          setIsGeneratingNames(true);
-                          generateNamesMutation.mutate(
-                            { 
-                              dealershipName,
-                              keywords: nameKeywords || undefined,
-                            },
-                            {
-                              onSuccess: (result) => {
-                                setNameSuggestions(result.suggestions);
-                                toast.success("Generated 5 unique platform names!");
-                                setIsGeneratingNames(false);
-                              },
-                              onError: () => {
-                                toast.error("Failed to generate names. Please try again.");
-                                setIsGeneratingNames(false);
-                              },
-                            }
-                          );
-                        }}
-                        disabled={isGeneratingNames}
-                        className="text-xs"
+                <Card className="border-none shadow-xl bg-card/95 backdrop-blur-sm">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-2xl font-serif text-primary">Special Finance Platform</CardTitle>
+                    <CardDescription className="text-base mt-2">
+                      For dealers focused on special financing or using short-term loan programs.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="pt-6">
+                    <div className="bg-primary/5 p-6 rounded-lg border border-primary/20">
+                      <p className="text-foreground mb-4">
+                        Are you focused on special financing or do you use short-term loan programs?
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Click <strong>Next</strong> to continue with platform customization options, or click <strong>Submit</strong> to complete your onboarding now.
+                      </p>
+                    </div>
+                  </CardContent>
+                  <CardFooter className="flex justify-between pt-6 border-t border-border/50">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={prevStep}
+                      className="text-muted-foreground hover:text-foreground"
+                    >
+                      <ChevronLeft className="mr-2 w-4 h-4" /> Back
+                    </Button>
+                    <div className="flex gap-3">
+                      <Button
+                        type="submit"
+                        variant="outline"
+                        size="lg"
+                        disabled={isSubmitting}
+                        className="min-w-[140px]"
                       >
-                        {isGeneratingNames ? (
-                          <>
-                            <Loader2 className="w-3 h-3 mr-1 animate-spin" />
-                            Generating...
-                          </>
-                        ) : (
-                          "Generate Ideas"
-                        )}
+                        {isSubmitting ? "Submitting..." : "Submit Now"}
+                        {!isSubmitting && <ShieldCheck className="ml-2 w-4 h-4" />}
+                      </Button>
+                      <Button
+                        type="button"
+                        size="lg"
+                        onClick={nextStep}
+                        className="min-w-[140px]"
+                      >
+                        Next <ChevronRight className="ml-2 w-4 h-4" />
                       </Button>
                     </div>
-                    {nameSuggestions.length > 0 ? (
-                      <div className="flex flex-wrap gap-2">
-                        {nameSuggestions.map((suggestion, index) => (
-                          <Button 
-                            key={index}
-                            type="button" 
-                            variant="outline" 
-                            size="sm"
-                            onClick={() => setValue("platformName", suggestion)}
-                            className="text-xs"
-                          >
-                            {suggestion}
-                          </Button>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-sm text-muted-foreground">Click "Generate Ideas" to get AI-powered platform name suggestions</p>
-                    )}
-                  </div>
-                </div>
-              </FormStep>
+                  </CardFooter>
+                </Card>
+              </motion.div>
             )}
 
-            {/* Step 12: Color Scheme */}
-            {currentStep === 13 && (
+            {/* Step 11: Color Scheme */}
+            {currentStep === 12 && (
               <FormStep
                 key="step16"
                 title="Color Scheme"
@@ -1049,8 +976,8 @@ export default function Home() {
               </FormStep>
             )}
 
-            {/* Step 13: Tire & Wheel Sales */}
-            {currentStep === 14 && (
+            {/* Step 12: Tire & Wheel Sales */}
+            {currentStep === 13 && (
               <FormStep
                 key="step15"
                 title="Tire & Wheel Sales"
@@ -1104,8 +1031,8 @@ export default function Home() {
               </FormStep>
             )}
 
-            {/* Step 14: Platform Usage */}
-            {currentStep === 15 && (
+            {/* Step 13: Platform Usage */}
+            {currentStep === 14 && (
               <FormStep
                 key="step16"
                 title="Platform Usage Strategy"
